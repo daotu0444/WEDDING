@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản Trị Thiệp Cưới - Minimalism CMS</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="min-h-screen bg-[#f7f5ee] text-[#00224c]">
+  <!-- Sticky Admin Header -->
+  <header class="sticky top-0 z-40 border-b border-white/10 shadow-md" style="background-color: #00224c; color: #ece4d8;">
+    <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
+      <div class="flex items-center gap-3">
+        <div class="flex h-10 w-10 items-center justify-center rounded-full border border-[#c9a24a]/50 bg-white/10 text-lg">
+          ❦
+        </div>
+        <div>
+          <h1 class="text-base sm:text-lg font-bold tracking-wide" style="font-family: 'Times New Roman', serif;">
+            QUẢN TRỊ THIỆP CƯỚI
+          </h1>
+          <p id="admin-couple-subtitle" class="text-xs opacity-80">Minimalism Lam Đậm</p>
+        </div>
+      </div>
+
+      <div class="flex flex-wrap items-center gap-2">
+        <a
+          id="btn-view-invite"
+          href="./index.html?open=1"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="inline-flex items-center gap-1.5 rounded-lg border border-[#ece4d8]/30 bg-white/10 px-3 py-1.5 text-xs sm:text-sm font-medium text-[#ece4d8] transition-colors hover:bg-white/20"
+        >
+          <span>👁️</span>
+          <span>Xem thiệp</span>
+        </a>
+        <button
+          id="btn-save-top"
+          type="button"
+          class="inline-flex items-center gap-1.5 rounded-lg bg-[#c9a24a] px-3.5 py-1.5 text-xs sm:text-sm font-semibold text-[#001531] shadow transition-transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+        >
+          <span>💾</span>
+          <span>Lưu thay đổi</span>
+        </button>
+        <button
+          id="btn-download-config"
+          type="button"
+          class="inline-flex items-center gap-1.5 rounded-lg bg-[#ece4d8] px-3 py-1.5 text-xs sm:text-sm font-semibold text-[#00224c] transition-colors hover:bg-white cursor-pointer"
+        >
+          <span>⬇️</span>
+          <span>Tải config.js</span>
+        </button>
+        <button
+          id="btn-reset-default"
+          type="button"
+          class="inline-flex items-center gap-1.5 rounded-lg border border-rose-300/40 px-3 py-1.5 text-xs sm:text-sm font-medium text-rose-200 transition-colors hover:bg-rose-500/20 cursor-pointer"
+        >
+          <span>↺</span>
+          <span>Mặc định</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Navigation Tabs -->
+    <div class="mx-auto flex max-w-6xl flex-wrap gap-2 px-4 sm:px-6 pb-2.5">
+      <button
+        id="tab-btn-templates"
+        type="button"
+        class="rounded-full px-4 py-1.5 text-xs sm:text-sm font-semibold transition-colors cursor-pointer bg-[#ece4d8] text-[#00224c]"
+      >
+        🎨 Mẫu thiệp
+      </button>
+      <button
+        id="tab-btn-editor"
+        type="button"
+        class="rounded-full px-4 py-1.5 text-xs sm:text-sm font-semibold transition-colors cursor-pointer text-[#ece4d8]/80 hover:bg-white/10"
+      >
+        ✏️ Chỉnh sửa nội dung
+      </button>
+      <button
+        id="tab-btn-guests"
+        type="button"
+        class="rounded-full px-4 py-1.5 text-xs sm:text-sm font-semibold transition-colors cursor-pointer text-[#ece4d8]/80 hover:bg-white/10"
+      >
+        💌 Phản hồi khách mời
+      </button>
+    </div>
+  </header>
+
+  <main class="mx-auto max-w-6xl px-4 py-6 sm:px-6">
+    <!-- ====================================================================
+         TAB 1: QUẢN LÝ & THÊM MẪU THIỆP MỚI
+         ==================================================================== -->
+    <section id="panel-templates" class="space-y-6">
+      <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-[#00224c]">Kho mẫu thiệp cưới của bạn</h2>
+          <p class="mt-0.5 text-xs text-[#00224c]/70">
+            Tạo nhiều mẫu với bảng màu và nội dung riêng, chọn mẫu mặc định hoặc chia sẻ link riêng từng mẫu (<code>?tpl=...</code>).
+          </p>
+        </div>
+        <button
+          id="btn-open-new-tpl"
+          type="button"
+          class="inline-flex items-center gap-1.5 rounded-lg bg-[#00224c] px-4 py-2 text-xs sm:text-sm font-semibold text-[#ece4d8] shadow hover:opacity-90 cursor-pointer"
+        >
+          <span>➕</span>
+          <span>Tạo mẫu mới</span>
+        </button>
+      </div>
+
+      <!-- Inline New Template Creator -->
+      <div id="new-tpl-panel" class="hidden rounded-xl border-2 border-[#c9a24a] bg-white p-5 shadow-md animate-fade-in">
+        <div class="flex items-center justify-between border-b border-gray-100 pb-3 mb-4">
+          <h3 class="text-base font-bold text-[#00224c]">✨ Tạo mẫu thiệp mới</h3>
+          <button id="btn-cancel-new-tpl" type="button" class="text-xs font-medium text-gray-500 hover:text-gray-800 cursor-pointer">
+            ✕ Đóng
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 gap-4 md:grid-cols-2">
+          <div>
+            <label for="new-tpl-name" class="block text-xs font-semibold text-gray-600 mb-1">Tên mẫu mới*</label>
+            <input
+              id="new-tpl-name"
+              type="text"
+              placeholder="VD: Đỏ Đô Sang Trọng / Tiệc Nhà Trai"
+              class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-[#00224c]"
+            />
+          </div>
+          <div>
+            <label for="new-tpl-source" class="block text-xs font-semibold text-gray-600 mb-1">Sao chép nội dung từ</label>
+            <select
+              id="new-tpl-source"
+              class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-[#00224c]"
+            ></select>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <p class="text-xs font-semibold text-gray-600 mb-2">Chọn bảng màu khởi đầu</p>
+          <div id="new-tpl-presets" class="grid grid-cols-2 gap-2.5 sm:grid-cols-3 md:grid-cols-5"></div>
+        </div>
+
+        <div class="mt-5 flex justify-end gap-2">
+          <button
+            id="btn-confirm-new-tpl"
+            type="button"
+            class="rounded-lg bg-[#00224c] px-5 py-2 text-sm font-semibold text-[#ece4d8] hover:opacity-90 cursor-pointer"
+          >
+            Tạo mẫu &amp; Chỉnh sửa ngay
+          </button>
+        </div>
+      </div>
+
+      <!-- Saved Templates Grid -->
+      <div id="templates-grid" class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"></div>
+    </section>
+
+    <!-- ====================================================================
+         TAB 2: CHỈNH SỬA NỘI DUNG & MÀU SẮC MẪU ĐANG CHỌN
+         ==================================================================== -->
+    <section id="panel-editor" class="hidden space-y-6 pb-20">
+      <!-- Active Template Switcher Bar -->
+      <div class="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-[#00224c1f] bg-white p-4 shadow-sm">
+        <div class="flex flex-wrap items-center gap-3 flex-1">
+          <label for="editor-tpl-select" class="text-xs sm:text-sm font-bold text-[#00224c] whitespace-nowrap">
+            Đang chỉnh sửa mẫu:
+          </label>
+          <select
+            id="editor-tpl-select"
+            class="rounded-lg border border-[#00224c]/30 bg-[#f7f5ee] px-3 py-1.5 text-sm font-semibold text-[#00224c] outline-none"
+          ></select>
+        </div>
+        <div class="flex items-center gap-2 flex-1 sm:flex-initial">
+          <label for="ed-tplName" class="text-xs font-semibold text-gray-500 whitespace-nowrap">Tên mẫu:</label>
+          <input
+            id="ed-tplName"
+            type="text"
+            class="w-full sm:w-56 rounded-lg border border-gray-200 px-3 py-1.5 text-sm font-medium outline-none focus:border-[#00224c]"
+          />
+        </div>
+      </div>
+
+      <form id="editor-form" class="space-y-6">
+        <!-- 0. Theme Colors -->
+        <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+          <div class="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-2">
+            <h2 class="text-base font-bold text-[#00224c]">🎨 Bảng màu giao diện (Theme)</h2>
+            <div id="editor-theme-presets" class="flex flex-wrap gap-1.5"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
+            <label class="flex flex-col gap-1 text-xs font-semibold text-gray-600">
+              Màu chủ đạo
+              <div class="flex items-center gap-2 rounded-lg border border-gray-200 p-1.5">
+                <input id="ed-thPrimary" type="color" class="h-7 w-8 cursor-pointer rounded border-0" />
+                <span id="ed-thPrimaryHex" class="font-mono text-[11px]"></span>
+              </div>
+            </label>
+            <label class="flex flex-col gap-1 text-xs font-semibold text-gray-600">
+              Nền tối (Bìa)
+              <div class="flex items-center gap-2 rounded-lg border border-gray-200 p-1.5">
+                <input id="ed-thPrimaryDark" type="color" class="h-7 w-8 cursor-pointer rounded border-0" />
+                <span id="ed-thPrimaryDarkHex" class="font-mono text-[11px]"></span>
+              </div>
+            </label>
+            <label class="flex flex-col gap-1 text-xs font-semibold text-gray-600">
+              Sáng (Gradient)
+              <div class="flex items-center gap-2 rounded-lg border border-gray-200 p-1.5">
+                <input id="ed-thPrimaryLight" type="color" class="h-7 w-8 cursor-pointer rounded border-0" />
+                <span id="ed-thPrimaryLightHex" class="font-mono text-[11px]"></span>
+              </div>
+            </label>
+            <label class="flex flex-col gap-1 text-xs font-semibold text-gray-600">
+              Nền giấy thiệp
+              <div class="flex items-center gap-2 rounded-lg border border-gray-200 p-1.5">
+                <input id="ed-thPaperBg" type="color" class="h-7 w-8 cursor-pointer rounded border-0" />
+                <span id="ed-thPaperBgHex" class="font-mono text-[11px]"></span>
+              </div>
+            </label>
+            <label class="flex flex-col gap-1 text-xs font-semibold text-gray-600">
+              Chữ trên nền tối
+              <div class="flex items-center gap-2 rounded-lg border border-gray-200 p-1.5">
+                <input id="ed-thCardText" type="color" class="h-7 w-8 cursor-pointer rounded border-0" />
+                <span id="ed-thCardTextHex" class="font-mono text-[11px]"></span>
+              </div>
+            </label>
+            <label class="flex flex-col gap-1 text-xs font-semibold text-gray-600">
+              Nhấn vàng đồng
+              <div class="flex items-center gap-2 rounded-lg border border-gray-200 p-1.5">
+                <input id="ed-thGoldAccent" type="color" class="h-7 w-8 cursor-pointer rounded border-0" />
+                <span id="ed-thGoldAccentHex" class="font-mono text-[11px]"></span>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- 1. Couple & Intro & Footer -->
+        <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+          <h2 class="mb-4 border-b border-gray-100 pb-2 text-base font-bold text-[#00224c]">1. Thông tin Cặp đôi, Bìa thiệp &amp; Footer</h2>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Tên ngắn Chú rể (Bìa &amp; Hero)</label>
+              <input id="ed-groomShort" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Tên ngắn Cô dâu (Bìa &amp; Hero)</label>
+              <input id="ed-brideShort" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Ngày hiển thị trên bìa mở thiệp</label>
+              <input id="ed-introDateText" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Họ tên đầy đủ Chú rể</label>
+              <input id="ed-groomFull" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Thứ bậc Chú rể</label>
+              <input id="ed-groomOrder" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Lời mời trên bìa thiệp</label>
+              <input id="ed-introGreeting" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Họ tên đầy đủ Cô dâu</label>
+              <input id="ed-brideFull" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Thứ bậc Cô dâu</label>
+              <input id="ed-brideOrder" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Nhãn Footer</label>
+              <input id="ed-footerBrand" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+
+            <div class="sm:col-span-2 lg:col-span-3">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Lời cảm ơn Footer</label>
+              <input id="ed-footerQuote" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Parents -->
+        <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+          <h2 class="mb-4 border-b border-gray-100 pb-2 text-base font-bold text-[#00224c]">2. Gia đình hai họ</h2>
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div class="space-y-3 rounded-lg bg-[#f7f5ee]/60 p-4">
+              <h3 class="text-sm font-bold text-[#00224c]">Nhà Trai</h3>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Danh xưng (VD: Ông Bà)</label>
+                <input id="ed-groomTitle" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Họ tên Bố Chú rể</label>
+                <input id="ed-groomFather" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Họ tên Mẹ Chú rể</label>
+                <input id="ed-groomMother" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Địa chỉ Nhà Trai</label>
+                <input id="ed-groomAddress" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+            </div>
+
+            <div class="space-y-3 rounded-lg bg-[#f7f5ee]/60 p-4">
+              <h3 class="text-sm font-bold text-[#00224c]">Nhà Gái</h3>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Danh xưng (VD: Ông Bà)</label>
+                <input id="ed-brideTitle" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Họ tên Bố Cô dâu</label>
+                <input id="ed-brideFather" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Họ tên Mẹ Cô dâu</label>
+                <input id="ed-brideMother" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Địa chỉ Nhà Gái</label>
+                <input id="ed-brideAddress" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Ceremony & Reception -->
+        <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+          <h2 class="mb-4 border-b border-gray-100 pb-2 text-base font-bold text-[#00224c]">3. Thời gian Lễ Thành Hôn &amp; Tiệc Cưới</h2>
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <!-- Ceremony -->
+            <div class="space-y-3 rounded-lg bg-[#f7f5ee]/60 p-4">
+              <h3 class="text-sm font-bold text-[#00224c]">Thông tin Lễ Cưới (Tư gia)</h3>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Tiêu đề địa điểm lễ (có thể xuống dòng)</label>
+                <textarea id="ed-cerVenueTitle" rows="2" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm"></textarea>
+              </div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Giờ</label>
+                  <input id="ed-cerTime" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Thứ</label>
+                  <input id="ed-cerDow" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Ngày</label>
+                  <input id="ed-cerDay" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Tháng (VD: THÁNG 10)</label>
+                  <input id="ed-cerMonth" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+              </div>
+              <div class="grid grid-cols-3 gap-2.5">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Năm</label>
+                  <input id="ed-cerYear" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div class="col-span-2">
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Ngày âm lịch</label>
+                  <input id="ed-cerLunar" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+              </div>
+            </div>
+
+            <!-- Reception -->
+            <div class="space-y-3 rounded-lg bg-[#f7f5ee]/60 p-4">
+              <h3 class="text-sm font-bold text-[#00224c]">Thông tin Tiệc Cưới &amp; Lịch Đếm Ngược</h3>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Giờ tiệc</label>
+                  <input id="ed-recTime" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Thứ</label>
+                  <input id="ed-recDow" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Ngày</label>
+                  <input id="ed-recDay" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Tháng (VD: THÁNG 12)</label>
+                  <input id="ed-recMonth" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Năm</label>
+                  <input id="ed-recYear" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Giờ đón khách</label>
+                  <input id="ed-recWelcome" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Giờ khai tiệc</label>
+                  <input id="ed-recPartyStart" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Ngày âm lịch</label>
+                  <input id="ed-recLunar" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+              </div>
+
+              <div class="grid grid-cols-3 gap-2.5 pt-1">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Lịch: Năm</label>
+                  <input id="ed-calYear" type="number" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Lịch: Tháng (1-12)</label>
+                  <input id="ed-calMonth" type="number" min="1" max="12" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Ngày trái tim</label>
+                  <input id="ed-calDay" type="number" min="1" max="31" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+              </div>
+
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Mốc đếm ngược ISO (YYYY-MM-DDTHH:mm:ss+07:00)</label>
+                <input id="ed-countdownIso" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-mono" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Venue & Dress Code -->
+        <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+          <h2 class="mb-4 border-b border-gray-100 pb-2 text-base font-bold text-[#00224c]">4. Địa điểm, Bản đồ &amp; Dress Code</h2>
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Tên nhà hàng / địa điểm</label>
+              <input id="ed-venueName" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Địa chỉ đầy đủ</label>
+              <input id="ed-venueAddress" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Vĩ độ bản đồ (Latitude)</label>
+              <input id="ed-mapLat" type="number" step="0.0001" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Kinh độ bản đồ (Longitude)</label>
+              <input id="ed-mapLng" type="number" step="0.0001" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Mô tả Dress Code</label>
+              <input id="ed-dcSubtitle" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">3 Màu Dress Code</label>
+              <div class="flex flex-wrap items-center gap-3">
+                <label class="flex items-center gap-1.5 text-xs font-mono">
+                  <input id="ed-dcColor0" type="color" class="h-9 w-10 cursor-pointer rounded border border-gray-200" />
+                  <span id="ed-dcHex0"></span>
+                </label>
+                <label class="flex items-center gap-1.5 text-xs font-mono">
+                  <input id="ed-dcColor1" type="color" class="h-9 w-10 cursor-pointer rounded border border-gray-200" />
+                  <span id="ed-dcHex1"></span>
+                </label>
+                <label class="flex items-center gap-1.5 text-xs font-mono">
+                  <input id="ed-dcColor2" type="color" class="h-9 w-10 cursor-pointer rounded border border-gray-200" />
+                  <span id="ed-dcHex2"></span>
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 5. Timeline -->
+        <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+          <div class="mb-4 flex items-center justify-between border-b border-gray-100 pb-2">
+            <h2 class="text-base font-bold text-[#00224c]">5. Lịch trình ngày cưới (Timeline)</h2>
+            <button
+              id="btn-add-timeline"
+              type="button"
+              class="rounded-lg border border-[#00224c] px-3 py-1 text-xs font-semibold text-[#00224c] hover:bg-[#00224c0d] cursor-pointer"
+            >
+              + Thêm mốc
+            </button>
+          </div>
+          <div id="editor-timeline-list" class="space-y-2.5"></div>
+        </div>
+
+        <!-- 6. Gift Box -->
+        <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+          <h2 class="mb-4 border-b border-gray-100 pb-2 text-base font-bold text-[#00224c]">6. Hộp quà mừng (Thông tin ngân hàng &amp; Mã QR)</h2>
+          <div class="grid grid-cols-1 gap-6 md:grid-cols-2">
+            <!-- Groom QR -->
+            <div class="space-y-3 rounded-lg bg-[#f7f5ee]/60 p-4">
+              <h3 class="text-sm font-bold text-[#00224c]">Thẻ Chú Rể</h3>
+              <div class="flex items-center gap-4">
+                <img id="preview-qr-groom" src="./assets/images/qr/qr-groom.png" alt="QR Chú Rể" class="h-20 w-20 rounded-lg border bg-white object-contain p-1" />
+                <div class="flex-1 space-y-2">
+                  <input id="ed-qrGroomSrc" type="text" placeholder="Đường dẫn ảnh QR" class="w-full rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-mono" />
+                  <label class="inline-block rounded-lg bg-[#00224c] px-3 py-1.5 text-xs font-medium text-white cursor-pointer hover:opacity-90">
+                    Tải ảnh QR từ máy
+                    <input type="file" accept="image/*" class="hidden" data-upload-target="ed-qrGroomSrc" data-preview-target="preview-qr-groom" />
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Tiêu đề thẻ</label>
+                <input id="ed-giftGroomTitle" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Ngân hàng</label>
+                  <input id="ed-giftGroomBank" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Số tài khoản</label>
+                  <input id="ed-giftGroomAcc" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-mono" />
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Chủ tài khoản</label>
+                <input id="ed-giftGroomHolder" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+            </div>
+
+            <!-- Bride QR -->
+            <div class="space-y-3 rounded-lg bg-[#f7f5ee]/60 p-4">
+              <h3 class="text-sm font-bold text-[#00224c]">Thẻ Cô Dâu</h3>
+              <div class="flex items-center gap-4">
+                <img id="preview-qr-bride" src="./assets/images/qr/qr-bride.png" alt="QR Cô Dâu" class="h-20 w-20 rounded-lg border bg-white object-contain p-1" />
+                <div class="flex-1 space-y-2">
+                  <input id="ed-qrBrideSrc" type="text" placeholder="Đường dẫn ảnh QR" class="w-full rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-mono" />
+                  <label class="inline-block rounded-lg bg-[#00224c] px-3 py-1.5 text-xs font-medium text-white cursor-pointer hover:opacity-90">
+                    Tải ảnh QR từ máy
+                    <input type="file" accept="image/*" class="hidden" data-upload-target="ed-qrBrideSrc" data-preview-target="preview-qr-bride" />
+                  </label>
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Tiêu đề thẻ</label>
+                <input id="ed-giftBrideTitle" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Ngân hàng</label>
+                  <input id="ed-giftBrideBank" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+                </div>
+                <div>
+                  <label class="block text-xs font-semibold text-gray-600 mb-1">Số tài khoản</label>
+                  <input id="ed-giftBrideAcc" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-mono" />
+                </div>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-600 mb-1">Chủ tài khoản</label>
+                <input id="ed-giftBrideHolder" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 7. Photos -->
+        <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+          <div class="mb-4 flex items-center justify-between border-b border-gray-100 pb-2">
+            <h2 class="text-base font-bold text-[#00224c]">7. Ảnh cưới (Polaroid đầu trang &amp; Album 3D)</h2>
+            <button
+              id="btn-add-album"
+              type="button"
+              class="rounded-lg border border-[#00224c] px-3 py-1 text-xs font-semibold text-[#00224c] hover:bg-[#00224c0d] cursor-pointer"
+            >
+              + Thêm ảnh Album
+            </button>
+          </div>
+
+          <div class="mb-5 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div class="flex items-center gap-3 rounded-lg bg-[#f7f5ee]/60 p-3">
+              <img id="preview-hero-1" src="./assets/images/photos/hero-1.webp" alt="Hero 1" class="h-20 w-16 rounded object-cover shadow-sm" />
+              <div class="flex-1 space-y-2">
+                <p class="text-xs font-bold text-[#00224c]">Ảnh Polaroid Trái (Hero 1)</p>
+                <input id="ed-hero1" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-mono" />
+                <label class="inline-block rounded bg-[#00224c] px-2.5 py-1 text-[11px] font-medium text-white cursor-pointer hover:opacity-90">
+                  Chọn ảnh từ máy
+                  <input type="file" accept="image/*" class="hidden" data-upload-target="ed-hero1" data-preview-target="preview-hero-1" />
+                </label>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-3 rounded-lg bg-[#f7f5ee]/60 p-3">
+              <img id="preview-hero-2" src="./assets/images/photos/hero-2.webp" alt="Hero 2" class="h-20 w-16 rounded object-cover shadow-sm" />
+              <div class="flex-1 space-y-2">
+                <p class="text-xs font-bold text-[#00224c]">Ảnh Polaroid Phải (Hero 2)</p>
+                <input id="ed-hero2" type="text" class="w-full rounded-lg border border-gray-200 bg-white px-2.5 py-1.5 text-xs font-mono" />
+                <label class="inline-block rounded bg-[#00224c] px-2.5 py-1 text-[11px] font-medium text-white cursor-pointer hover:opacity-90">
+                  Chọn ảnh từ máy
+                  <input type="file" accept="image/*" class="hidden" data-upload-target="ed-hero2" data-preview-target="preview-hero-2" />
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div id="editor-album-list" class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"></div>
+        </div>
+      </form>
+    </section>
+
+    <!-- ====================================================================
+         TAB 3: PHẢN HỒI KHÁCH MỜI (RSVP & SỔ LƯU BÚT)
+         ==================================================================== -->
+    <section id="panel-guests" class="hidden space-y-6">
+      <!-- KPI Cards -->
+      <div class="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4">
+        <div class="rounded-xl border border-[#00224c1a] bg-white p-4 shadow-sm">
+          <p class="text-xs font-medium uppercase tracking-wider text-[#00224c]/60">Tổng lượt RSVP</p>
+          <p id="kpi-rsvp-total" class="mt-1.5 text-2xl sm:text-3xl font-bold text-[#00224c] tabular-nums">0</p>
+          <p class="mt-1 text-[11px] text-[#00224c]/55">Phản hồi xác nhận tham dự</p>
+        </div>
+
+        <div class="rounded-xl border border-emerald-200 bg-white p-4 shadow-sm">
+          <p class="text-xs font-medium uppercase tracking-wider text-emerald-700">Sẽ tham dự</p>
+          <p id="kpi-rsvp-attending" class="mt-1.5 text-2xl sm:text-3xl font-bold text-emerald-700 tabular-nums">0</p>
+          <p class="mt-1 text-[11px] text-emerald-700/80">
+            Tổng số khách: <strong id="kpi-rsvp-guests-count" class="tabular-nums">0</strong> người
+          </p>
+        </div>
+
+        <div class="rounded-xl border border-slate-200 bg-white p-4 shadow-sm">
+          <p class="text-xs font-medium uppercase tracking-wider text-slate-500">Không thể đến</p>
+          <p id="kpi-rsvp-declining" class="mt-1.5 text-2xl sm:text-3xl font-bold text-slate-700 tabular-nums">0</p>
+          <p class="mt-1 text-[11px] text-slate-500">Khách báo vắng mặt</p>
+        </div>
+
+        <div class="rounded-xl border border-[#c9a24a]/40 bg-white p-4 shadow-sm">
+          <p class="text-xs font-medium uppercase tracking-wider text-[#8a6a1c]">Lời chúc mới</p>
+          <p id="kpi-wishes-new" class="mt-1.5 text-2xl sm:text-3xl font-bold text-[#00224c] tabular-nums">0</p>
+          <p class="mt-1 text-[11px] text-[#00224c]/55">Từ Sổ lưu bút</p>
+        </div>
+      </div>
+
+      <!-- Online Sync (Google Sheets / Apps Script) -->
+      <div class="rounded-xl border border-[#00224c1f] bg-white p-5 shadow-sm">
+        <div class="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 class="text-base font-bold text-[#00224c]">☁️ Đồng bộ trực tuyến qua Google Sheets (khi chạy trên GitHub Pages)</h2>
+            <p class="mt-1 text-xs text-[#00224c]/70">
+              Mặc định dữ liệu khách gửi được lưu trên trình duyệt. Để nhận phản hồi từ điện thoại của tất cả khách mời về trang quản trị này, hãy dán URL Google Apps Script Web App bên dưới rồi lưu &amp; tải <code>config.js</code> đẩy lên GitHub.
+            </p>
+          </div>
+          <button
+            id="btn-sync-sheets"
+            type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg bg-[#00224c] px-3.5 py-2 text-xs font-semibold text-[#ece4d8] hover:opacity-90 cursor-pointer shrink-0"
+          >
+            <span>🔄</span>
+            <span>Đồng bộ từ Google Sheets</span>
+          </button>
+        </div>
+
+        <div class="mt-3 flex flex-col gap-2 sm:flex-row">
+          <input
+            id="sync-webhook-url"
+            type="url"
+            placeholder="https://script.google.com/macros/s/.../exec"
+            class="flex-1 rounded-lg border border-gray-200 px-3.5 py-2 text-sm text-gray-800 outline-none focus:border-[#00224c] focus:ring-2 focus:ring-[#00224c22]"
+          />
+          <button
+            id="btn-save-webhook"
+            type="button"
+            class="rounded-lg border border-[#00224c] px-4 py-2 text-xs sm:text-sm font-semibold text-[#00224c] hover:bg-[#00224c0d] cursor-pointer shrink-0"
+          >
+            Lưu link Webhook
+          </button>
+        </div>
+
+        <details class="mt-3 rounded-lg border border-[#00224c1a] bg-[#f7f5ee]/70 p-3 text-xs">
+          <summary class="cursor-pointer font-semibold text-[#00224c]">
+            📋 Hướng dẫn thiết lập Google Sheets miễn phí &amp; Mã Google Apps Script (copy 1 chạm)
+          </summary>
+          <div class="mt-3 space-y-2 text-[#00224c]/85">
+            <ol class="list-decimal space-y-1 pl-5">
+              <li>Tạo một file Google Sheets mới trên Google Drive.</li>
+              <li>Vào menu <strong>Tiện ích mở rộng (Extensions) → Apps Script</strong>, xóa mã mặc định và dán đoạn mã dưới đây vào.</li>
+              <li>Bấm <strong>Triển khai (Deploy) → Tùy chọn triển khai mới (New deployment) → Ứng dụng web (Web app)</strong>.</li>
+              <li>Chọn <strong>Thực thi với tư cách: Tôi (Me)</strong> và <strong>Ai có quyền truy cập: Bất kỳ ai (Anyone)</strong> → Deploy → Copy URL Web App dán vào ô bên trên.</li>
+            </ol>
+            <div class="relative mt-2">
+              <button
+                id="btn-copy-gas"
+                type="button"
+                class="absolute right-2 top-2 rounded bg-[#00224c] px-2.5 py-1 text-[11px] font-medium text-white hover:opacity-90 cursor-pointer"
+              >
+                📋 Sao chép mã
+              </button>
+              <pre id="gas-code-block" class="overflow-x-auto rounded-lg bg-[#001531] p-3 pr-28 text-[11px] leading-relaxed text-[#ece4d8]">function doPost(e) {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  var data = JSON.parse(e.postData.contents);
+  var sheetName = data.type === 'rsvp' ? 'RSVP' : 'Wishes';
+  var sheet = ss.getSheetByName(sheetName) || ss.insertSheet(sheetName);
+  if (sheet.getLastRow() === 0) {
+    if (sheetName === 'RSVP') {
+      sheet.appendRow(['ID', 'Ten', 'TrangThai', 'SoKhach', 'LoiNhan', 'ThoiGian', 'MauThiep']);
+    } else {
+      sheet.appendRow(['ID', 'Ten', 'LoiChuc', 'ThoiGian', 'MauThiep']);
+    }
+  }
+  if (sheetName === 'RSVP') {
+    sheet.appendRow([data.id, data.name, data.status, data.guests, data.note, data.createdAt, data.templateId || '']);
+  } else {
+    sheet.appendRow([data.id, data.name, data.message, data.time, data.templateId || '']);
+  }
+  return ContentService.createTextOutput(JSON.stringify({ ok: true }))
+    .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet() {
+  var ss = SpreadsheetApp.getActiveSpreadsheet();
+  function readSheet(name, mapFn) {
+    var s = ss.getSheetByName(name);
+    if (!s || s.getLastRow() < 2) return [];
+    var rows = s.getDataRange().getValues().slice(1);
+    return rows.map(mapFn).reverse();
+  }
+  var rsvps = readSheet('RSVP', function(r) {
+    return { id: String(r[0]), name: String(r[1]), status: String(r[2]), guests: Number(r[3] || 0), note: String(r[4] || ''), createdAt: String(r[5] || ''), templateId: String(r[6] || '') };
+  });
+  var wishes = readSheet('Wishes', function(r) {
+    return { id: String(r[0]), name: String(r[1]), message: String(r[2] || ''), time: String(r[3] || ''), templateId: String(r[4] || '') };
+  });
+  return ContentService.createTextOutput(JSON.stringify({ rsvps: rsvps, wishes: wishes }))
+    .setMimeType(ContentService.MimeType.JSON);
+}</pre>
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <!-- RSVP Table Card -->
+      <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <h2 class="text-base sm:text-lg font-bold text-[#00224c]">Danh sách xác nhận tham dự (RSVP)</h2>
+          <button
+            id="btn-export-rsvp"
+            type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-[#00224c]/30 bg-[#f7f5ee] px-3 py-1.5 text-xs font-semibold text-[#00224c] hover:bg-[#ece4d8] cursor-pointer"
+          >
+            <span>📥</span>
+            <span>Xuất CSV RSVP</span>
+          </button>
+        </div>
+
+        <div class="mb-4 flex flex-col gap-2.5 sm:flex-row">
+          <input
+            id="rsvp-search"
+            type="search"
+            placeholder="Tìm theo tên hoặc lời nhắn..."
+            class="flex-1 rounded-lg border border-gray-200 px-3.5 py-2 text-sm outline-none focus:border-[#00224c]"
+          />
+          <select
+            id="rsvp-filter"
+            class="rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm outline-none focus:border-[#00224c]"
+          >
+            <option value="all">Tất cả trạng thái</option>
+            <option value="attending">Sẽ tham dự</option>
+            <option value="declining">Không thể đến</option>
+          </select>
+        </div>
+
+        <div class="overflow-x-auto rounded-lg border border-gray-100">
+          <table class="w-full min-w-[620px] border-collapse text-left text-sm">
+            <thead class="bg-[#00224c]/5 text-xs uppercase text-[#00224c]/75">
+              <tr>
+                <th class="px-4 py-3 font-semibold">Tên khách</th>
+                <th class="px-4 py-3 font-semibold">Trạng thái</th>
+                <th class="px-4 py-3 font-semibold text-center">Số khách</th>
+                <th class="px-4 py-3 font-semibold">Lời nhắn</th>
+                <th class="px-4 py-3 font-semibold">Thời gian</th>
+                <th class="px-4 py-3 font-semibold text-right">Thao tác</th>
+              </tr>
+            </thead>
+            <tbody id="rsvp-table-body" class="divide-y divide-gray-100"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Wishes Table Card -->
+      <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+          <h2 class="text-base sm:text-lg font-bold text-[#00224c]">Lời chúc từ Sổ lưu bút</h2>
+          <button
+            id="btn-export-wishes"
+            type="button"
+            class="inline-flex items-center gap-1.5 rounded-lg border border-[#00224c]/30 bg-[#f7f5ee] px-3 py-1.5 text-xs font-semibold text-[#00224c] hover:bg-[#ece4d8] cursor-pointer"
+          >
+            <span>📥</span>
+            <span>Xuất CSV Lời chúc</span>
+          </button>
+        </div>
+
+        <div class="mb-4 flex flex-col gap-2.5 sm:flex-row sm:items-center sm:justify-between">
+          <input
+            id="wishes-search"
+            type="search"
+            placeholder="Tìm theo tên hoặc nội dung lời chúc..."
+            class="flex-1 rounded-lg border border-gray-200 px-3.5 py-2 text-sm outline-none focus:border-[#00224c]"
+          />
+          <label class="inline-flex items-center gap-2 text-xs font-medium text-[#00224c]/80 cursor-pointer select-none">
+            <input id="toggle-default-wishes" type="checkbox" class="h-4 w-4 accent-[#00224c]" />
+            <span>Hiện thêm 10 lời chúc mẫu mặc định</span>
+          </label>
+        </div>
+
+        <div id="wishes-admin-list" class="space-y-2.5"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Toast Container -->
+  <div id="admin-toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <script src="./config.js"></script>
+  <script src="./admin.js"></script>
+</body>
+</html>

@@ -44,6 +44,7 @@
         >
           <!-- Paper & corner hydrangea illustrations -->
           <div
+            id="intro-card-surface"
             class="absolute inset-0 rounded-lg overflow-hidden"
             style="background: rgba(247, 245, 238, 0.96); border: 1px solid rgba(0, 34, 76, 0.15); clip-path: inset(0 round 8px);"
           >
@@ -62,24 +63,26 @@
           <!-- Card content -->
           <div class="relative z-10 text-center px-6 pt-28 pb-14 md:pt-24 md:pb-8">
             <h1
+              data-theme-text="primary"
               class="mb-2 flex flex-col items-center leading-tight text-3xl sm:text-4xl"
               style="color: #00224c; font-family: 'Viaoda Libre', 'EB Garamond', serif;"
             >
-              <span class="block w-full text-center">Tuấn Kiệt</span>
+              <span id="intro-groom" class="block w-full text-center">Tuấn Kiệt</span>
               <span
                 class="block w-full text-center text-lg leading-none sm:text-xl my-0.5"
                 style="font-family: 'Baskerville', 'Times New Roman', serif;"
               >&amp;</span>
-              <span class="block w-full text-center">Minh Anh</span>
+              <span id="intro-bride" class="block w-full text-center">Minh Anh</span>
             </h1>
 
             <div class="flex items-center justify-center gap-3 mb-2">
               <span class="w-10 h-px" style="background: linear-gradient(to right, transparent, #00224c);"></span>
-              <span class="text-sm" style="color: #00224c; opacity: 0.7;">❦</span>
+              <span data-theme-text="primary" class="text-sm" style="color: #00224c; opacity: 0.7;">❦</span>
               <span class="w-10 h-px" style="background: linear-gradient(to left, transparent, #00224c);"></span>
             </div>
 
             <div
+              id="intro-date"
               class="text-[18px] mb-5 flex flex-col items-center"
               style="color: rgba(0, 34, 76, 0.72); font-family: 'Lora', 'Times New Roman', serif;"
             >
@@ -88,6 +91,8 @@
 
             <div class="mb-6 max-w-[300px] md:max-w-[380px] lg:max-w-[440px] mx-auto">
               <p
+                id="intro-greeting"
+                data-theme-text="primary"
                 class="text-[18px] font-light mb-2"
                 style="color: #00224c; font-family: 'Lora', 'Times New Roman', serif;"
               >
@@ -98,6 +103,8 @@
             <button
               id="open-invite-btn"
               type="button"
+              data-theme-bg="primary"
+              data-theme-card-text="1"
               class="relative px-8 py-2.5 text-lg font-semibold sm:font-medium rounded-full shadow-lg no-underline cursor-pointer flex w-fit items-center justify-center mx-auto overflow-hidden transition-transform hover:scale-[1.03] active:scale-[0.98]"
               style="background-color: #00224c; color: #ece4d8; box-shadow: 0 4px 14px rgba(0, 34, 76, 0.35); font-family: 'Lora', 'Times New Roman', serif;"
             >
@@ -122,6 +129,8 @@
       <div class="flex w-full justify-center overflow-x-clip bg-white">
         <div
           data-showcase-root
+          data-theme-paper="1"
+          data-theme-text="primary"
           class="relative w-full max-w-[480px] md:max-w-[900px] md:mx-auto overflow-hidden md:border md:border-[#00224c22] isolate"
           style="background-color: rgb(247, 245, 238); color: rgb(0, 34, 76);"
         >
@@ -155,6 +164,7 @@
 
             <!-- Save The Date -->
             <p
+              data-theme-text="primary"
               class="relative z-10 whitespace-pre-line text-[15px] uppercase md:text-[18px]"
               style="font-family: 'Playfair Display', 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.14em; font-weight: 600;"
             >Save The Date</p>
@@ -185,6 +195,7 @@
                 >
                   <div class="aspect-[191/255] rotate-[-9.93deg] border-[6px] border-white bg-white shadow-[2px_2px_4px_rgba(0,0,0,0.25)] md:border-8 overflow-hidden">
                     <img
+                      id="hero-img-1"
                       src="./assets/images/photos/hero-1.webp"
                       alt="Ảnh cưới Tuấn Kiệt & Minh Anh 1"
                       class="h-full w-full object-cover"
@@ -199,6 +210,7 @@
                 >
                   <div class="aspect-[167/219] rotate-[17.26deg] border-[6px] border-white bg-white shadow-[2px_2px_4px_rgba(0,0,0,0.25)] md:border-8 overflow-hidden">
                     <img
+                      id="hero-img-2"
                       src="./assets/images/photos/hero-2.webp"
                       alt="Ảnh cưới Tuấn Kiệt & Minh Anh 2"
                       class="h-full w-full object-cover"
@@ -228,15 +240,20 @@
             <!-- Hero couple names -->
             <div class="relative z-10 mt-[24%] flex flex-col items-center gap-[19px]">
               <span
+                id="hero-groom"
+                data-theme-text="primary"
                 class="text-[clamp(36px,10.5vw,45px)] uppercase leading-none md:text-[56px]"
                 style="font-family: 'Viaoda Libre', 'The Nautigal', cursive; color: rgb(0, 34, 76);"
               >Tuấn Kiệt</span>
               <span
+                id="hero-amp"
                 aria-hidden="true"
                 class="pointer-events-none absolute top-[37%] -translate-y-1/2 text-[100px] leading-none md:text-[128px]"
                 style="font-family: 'The Nautigal', cursive; color: rgba(0, 34, 76, 0.15);"
               >&amp;</span>
               <span
+                id="hero-bride"
+                data-theme-text="primary"
                 class="text-[clamp(36px,10.5vw,45px)] uppercase leading-none md:text-[56px]"
                 style="font-family: 'Viaoda Libre', 'The Nautigal', cursive; color: rgb(0, 34, 76);"
               >Minh Anh</span>
@@ -277,6 +294,8 @@
 
             <!-- Dark Navy Card -->
             <div
+              data-theme-bg="primary"
+              data-theme-card-text="1"
               class="relative overflow-hidden rounded-[13px] px-5 pb-10 pt-9 text-center shadow-[4px_4px_10px_rgba(0,0,0,0.25)]"
               style="background-color: #00224c; color: #ece4d8;"
             >
@@ -289,6 +308,7 @@
 
               <div class="relative z-10">
                 <h2
+                  data-theme-card-text="1"
                   class="text-[20px] font-bold uppercase md:text-[24px]"
                   style="font-family: 'Times New Roman', serif; color: #ece4d8; letter-spacing: 0.03em;"
                 >
@@ -298,25 +318,25 @@
                 <!-- Parents Grid -->
                 <div class="mt-6 grid grid-cols-[1fr_auto_1fr] grid-rows-[repeat(4,auto)] justify-center gap-x-4 sm:gap-x-8 gap-y-[3px] text-[11px] sm:text-[12px] md:text-[13px]">
                   <!-- Row 1 -->
-                  <p class="uppercase tracking-wider opacity-75" style="font-family: 'Times New Roman', serif;">Ông Bà</p>
+                  <p id="par-groom-title" class="uppercase tracking-wider opacity-75" style="font-family: 'Times New Roman', serif;">Ông Bà</p>
                   <div class="row-span-4 flex items-center justify-center">
                     <span class="block h-[50px] w-[1px]" style="background-color: rgba(236, 228, 216, 0.4);"></span>
                   </div>
-                  <p class="uppercase tracking-wider opacity-75" style="font-family: 'Times New Roman', serif;">Ông Bà</p>
+                  <p id="par-bride-title" class="uppercase tracking-wider opacity-75" style="font-family: 'Times New Roman', serif;">Ông Bà</p>
 
                   <!-- Row 2 -->
-                  <p class="font-medium">Lý Văn Hoà</p>
-                  <p class="font-medium">Đinh Hữu Nam</p>
+                  <p id="par-groom-father" class="font-medium">Lý Văn Hoà</p>
+                  <p id="par-bride-father" class="font-medium">Đinh Hữu Nam</p>
 
                   <!-- Row 3 -->
-                  <p class="font-medium">Trịnh Thị Bích Vân</p>
-                  <p class="font-medium">Phan Thị Kim Yến</p>
+                  <p id="par-groom-mother" class="font-medium">Trịnh Thị Bích Vân</p>
+                  <p id="par-bride-mother" class="font-medium">Phan Thị Kim Yến</p>
 
                   <!-- Row 4 -->
-                  <p class="mt-1 text-[10px] md:text-[11px] leading-snug opacity-70">
+                  <p id="par-groom-addr" class="mt-1 text-[10px] md:text-[11px] leading-snug opacity-70">
                     Phường Tân Định, Quận 1, TP. Hồ Chí Minh
                   </p>
-                  <p class="mt-1 text-[10px] md:text-[11px] leading-snug opacity-70">
+                  <p id="par-bride-addr" class="mt-1 text-[10px] md:text-[11px] leading-snug opacity-70">
                     Phường Thảo Điền, TP. Thủ Đức, TP. Hồ Chí Minh
                   </p>
                 </div>
@@ -335,12 +355,15 @@
                 <!-- Couple names & birth order -->
                 <div class="mt-5 flex flex-col items-center">
                   <h3
+                    id="cer-groom-full"
+                    data-theme-card-text="1"
                     class="text-[36px] md:text-[40px] leading-tight"
                     style="font-family: 'Viaoda Libre', 'The Nautigal', cursive; color: #ece4d8;"
                   >
                     Trần Tuấn Kiệt
                   </h3>
                   <span
+                    id="cer-groom-order"
                     class="mt-0.5 text-[10px] uppercase tracking-[0.14em] opacity-75"
                     style="font-family: 'Uchen', 'Noto Serif', serif;"
                   >
@@ -348,6 +371,7 @@
                   </span>
 
                   <span
+                    data-theme-card-text="1"
                     class="my-1 text-[35px] leading-none opacity-90"
                     style="font-family: 'Ms Madi', 'The Nautigal', cursive; color: #ece4d8;"
                   >
@@ -355,12 +379,15 @@
                   </span>
 
                   <h3
+                    id="cer-bride-full"
+                    data-theme-card-text="1"
                     class="text-[36px] md:text-[40px] leading-tight"
                     style="font-family: 'Viaoda Libre', 'The Nautigal', cursive; color: #ece4d8;"
                   >
                     Lê Minh Anh
                   </h3>
                   <span
+                    id="cer-bride-order"
                     class="mt-0.5 text-[10px] uppercase tracking-[0.14em] opacity-75"
                     style="font-family: 'Uchen', 'Noto Serif', serif;"
                   >
@@ -371,30 +398,32 @@
                 <!-- Ceremony Time & Date -->
                 <div class="mt-7">
                   <p
+                    id="cer-venue-title"
                     class="whitespace-pre-line text-[11px] md:text-[12px] uppercase tracking-[0.1em] leading-relaxed opacity-80"
                     style="font-family: 'Times New Roman', serif;"
                   >LỄ THÀNH HÔN ĐƯỢC CỬ HÀNH TẠI
 TƯ GIA</p>
 
                   <div class="mt-4 flex items-center justify-center gap-3 text-[12px] md:text-[13px] tracking-[0.1em] uppercase">
-                    <span>VÀO LÚC 09:00</span>
+                    <span id="cer-time">VÀO LÚC 09:00</span>
                     <span class="h-3.5 w-px" style="background-color: rgba(236, 228, 216, 0.45);"></span>
-                    <span>THỨ BẢY</span>
+                    <span id="cer-dow">THỨ BẢY</span>
                   </div>
 
                   <div class="mt-3 flex items-center justify-center gap-4">
                     <span
+                      id="cer-day"
                       class="text-[40px] md:text-[46px] font-normal leading-none"
                       style="font-family: Baskerville, 'Times New Roman', serif;"
                     >10</span>
                     <span class="h-[46px] w-px" style="background-color: rgba(236, 228, 216, 0.45);"></span>
                     <div class="flex flex-col items-start text-left text-[12px] md:text-[14px] tracking-[0.1em] uppercase leading-snug">
-                      <span>THÁNG 10</span>
-                      <span>2026</span>
+                      <span id="cer-month">THÁNG 10</span>
+                      <span id="cer-year">2026</span>
                     </div>
                   </div>
 
-                  <p class="mt-3 text-[12px] md:text-[13px] italic opacity-75">
+                  <p id="cer-lunar" class="mt-3 text-[12px] md:text-[13px] italic opacity-75">
                     (Tức ngày 1 tháng 9 năm Bính Ngọ)
                   </p>
                 </div>
@@ -408,6 +437,7 @@ TƯ GIA</p>
           <div class="relative z-10 overflow-x-clip">
             <div class="relative z-10 flex flex-col items-center px-6 pb-10 pt-10">
               <h2
+                data-theme-text="primary"
                 class="text-[20px] font-bold uppercase md:text-[24px]"
                 style="font-family: 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.03em;"
               >
@@ -493,6 +523,8 @@ TƯ GIA</p>
 
             <!-- Dark Navy Reception Card -->
             <div
+              data-theme-bg="primary"
+              data-theme-card-text="1"
               class="relative overflow-hidden rounded-[10px] px-5 py-9 text-center shadow-[4px_4px_10px_rgba(0,0,0,0.25)]"
               style="background-color: #00224c; color: #ece4d8;"
             >
@@ -504,6 +536,7 @@ TƯ GIA</p>
 
               <div class="relative z-10">
                 <h2
+                  data-theme-card-text="1"
                   class="text-[20px] font-bold uppercase md:text-[24px]"
                   style="font-family: 'Times New Roman', serif; color: #ece4d8; letter-spacing: 0.03em;"
                 >
@@ -515,24 +548,25 @@ TƯ GIA</p>
                 </p>
 
                 <div class="mt-3 flex items-center justify-center gap-3 text-[12px] md:text-[13px] tracking-[0.1em] uppercase">
-                  <span>18:30</span>
+                  <span id="rec-time">18:30</span>
                   <span class="h-3.5 w-px" style="background-color: rgba(236, 228, 216, 0.45);"></span>
-                  <span>THỨ BẢY</span>
+                  <span id="rec-dow">THỨ BẢY</span>
                 </div>
 
                 <div class="mt-3 flex items-center justify-center gap-4">
                   <span
+                    id="rec-day"
                     class="text-[46px] md:text-[52px] font-normal leading-none"
                     style="font-family: Baskerville, 'Times New Roman', serif;"
                   >19</span>
                   <span class="h-[52px] w-px" style="background-color: rgba(236, 228, 216, 0.45);"></span>
                   <div class="flex flex-col items-start text-left text-[12px] md:text-[14px] tracking-[0.1em] uppercase leading-snug">
-                    <span>THÁNG 12</span>
-                    <span>2026</span>
+                    <span id="rec-month">THÁNG 12</span>
+                    <span id="rec-year">2026</span>
                   </div>
                 </div>
 
-                <p class="mt-2.5 text-[12px] md:text-[13px] italic opacity-75">
+                <p id="rec-lunar" class="mt-2.5 text-[12px] md:text-[13px] italic opacity-75">
                   (Tức ngày 11 tháng 11 năm Bính Ngọ)
                 </p>
 
@@ -540,12 +574,12 @@ TƯ GIA</p>
                 <div class="mt-5 flex items-center justify-center gap-8 text-[12px] md:text-[13px]">
                   <div class="flex flex-col items-center">
                     <span class="opacity-70">Đón khách</span>
-                    <span class="mt-0.5 font-semibold tracking-wider">17:30</span>
+                    <span id="rec-welcome" class="mt-0.5 font-semibold tracking-wider">17:30</span>
                   </div>
                   <span class="h-7 w-px" style="background-color: rgba(236, 228, 216, 0.35);"></span>
                   <div class="flex flex-col items-center">
                     <span class="opacity-70">Khai tiệc</span>
-                    <span class="mt-0.5 font-semibold tracking-wider">18:30</span>
+                    <span id="rec-party-start" class="mt-0.5 font-semibold tracking-wider">18:30</span>
                   </div>
                 </div>
 
@@ -562,12 +596,14 @@ TƯ GIA</p>
 
                 <!-- Cream Calendar Card -->
                 <div
+                  id="calendar-card"
                   class="mt-4 mx-auto w-fit rounded-[10px] px-4 pb-4 pt-2 shadow-inner"
                   style="background-color: #ece4d8; color: #00224c;"
                 >
                   <div class="w-[260px] sm:w-[280px] md:w-[330px]">
                     <!-- Calendar header -->
                     <div
+                      id="calendar-title"
                       class="py-1.5 text-[25px] leading-tight"
                       style="font-family: 'The Nautigal', cursive; border-bottom: 1px solid rgba(0, 34, 76, 0.27);"
                     >
@@ -576,6 +612,7 @@ TƯ GIA</p>
 
                     <!-- Weekday row -->
                     <div
+                      id="calendar-weekdays"
                       class="grid grid-cols-7 py-1.5 text-[10px] md:text-[11px] font-semibold uppercase tracking-wider"
                       style="border-bottom: 2px solid #00224c;"
                     >
@@ -588,8 +625,8 @@ TƯ GIA</p>
                       <span class="opacity-60">CN</span>
                     </div>
 
-                    <!-- Days grid (Dec 1, 2026 is Tuesday -> 1 empty slot before day 1) -->
-                    <div class="grid grid-cols-7 gap-y-0.5 px-1 py-2 text-[12px] md:text-[13px] tabular-nums">
+                    <!-- Days grid -->
+                    <div id="calendar-days-grid" class="grid grid-cols-7 gap-y-0.5 px-1 py-2 text-[12px] md:text-[13px] tabular-nums">
                       <span class="h-[30px] md:h-[34px]"></span>
                       <span class="flex h-[30px] md:h-[34px] items-center justify-center">1</span>
                       <span class="flex h-[30px] md:h-[34px] items-center justify-center">2</span>
@@ -640,6 +677,7 @@ TƯ GIA</p>
                 <!-- Add to Google Calendar Link -->
                 <div class="mt-3">
                   <a
+                    id="gcal-link"
                     href="https://www.google.com/calendar/render?action=TEMPLATE&text=%C4%90%C3%A1m%20c%C6%B0%E1%BB%9Bi%20Tr%E1%BA%A7n%20Tu%E1%BA%A5n%20Ki%E1%BB%87t%20%26%20L%C3%AA%20Minh%20Anh&dates=20261219T113000Z/20261219T133000Z&ctz=Asia/Ho_Chi_Minh&details=Ti%E1%BB%87c%20c%C6%B0%E1%BB%9Bi%20c%E1%BB%A7a%20Tr%E1%BA%A7n%20Tu%E1%BA%A5n%20Ki%E1%BB%87t%20%26%20L%C3%AA%20Minh%20Anh%20t%E1%BA%A1i%20Nh%C3%A0%20H%C3%A0ng%20Ti%E1%BB%87c%20C%C6%B0%E1%BB%9Bi%20Riverside%20Palace%2C%20360D%20B%E1%BA%BFn%20V%C3%A2n%20%C4%90%E1%BB%93n%2C%20Ph%C6%B0%E1%BB%9Dng%201%2C%20Qu%E1%BA%ADn%204%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh&location=Nh%C3%A0%20H%C3%A0ng%20Ti%E1%BB%87c%20C%C6%B0%E1%BB%9Bi%20Riverside%20Palace%2C%20360D%20B%E1%BA%BFn%20V%C3%A2n%20%C4%90%E1%BB%93n%2C%20Ph%C6%B0%E1%BB%9Dng%201%2C%20Qu%E1%BA%ADn%204%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -657,6 +695,7 @@ TƯ GIA</p>
               <button
                 id="open-rsvp-btn"
                 type="button"
+                data-theme-bg="primary"
                 class="inline-flex items-center justify-center rounded-full px-7 py-1.5 text-[13px] uppercase tracking-wide transition-transform hover:scale-[1.03] cursor-pointer shadow-md"
                 style="background-color: rgb(0, 34, 76); color: rgb(222, 217, 215);"
               >
@@ -673,6 +712,7 @@ TƯ GIA</p>
             class="relative z-10 flex w-full flex-col items-center px-6 pb-8 pt-8 text-center"
           >
             <h3
+              data-theme-text="primary"
               class="text-[20px] font-bold uppercase md:text-[24px]"
               style="font-family: 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.03em;"
             >
@@ -680,6 +720,7 @@ TƯ GIA</p>
             </h3>
 
             <p
+              id="venue-address-text"
               class="mt-2 max-w-[250px] md:max-w-[440px] text-[12px] md:text-[14px] leading-relaxed"
               style="color: rgba(1, 47, 83, 0.72);"
             >
@@ -687,6 +728,7 @@ TƯ GIA</p>
             </p>
 
             <iframe
+              id="venue-map-iframe"
               title="Bản đồ địa điểm tổ chức tiệc cưới Riverside Palace"
               src="https://www.openstreetmap.org/export/embed.html?bbox=106.6968%2C10.7582%2C106.7052%2C10.7646&layer=mapnik&marker=10.7614%2C106.7010"
               loading="lazy"
@@ -695,6 +737,7 @@ TƯ GIA</p>
             ></iframe>
 
             <a
+              id="venue-directions-link"
               href="https://www.google.com/maps/dir/?api=1&destination=Nh%C3%A0%20H%C3%A0ng%20Ti%E1%BB%87c%20C%C6%B0%E1%BB%9Bi%20Riverside%20Palace%2C%20360D%20B%E1%BA%BFn%20V%C3%A2n%20%C4%90%E1%BB%93n%2C%20Ph%C6%B0%E1%BB%9Dng%201%2C%20Qu%E1%BA%ADn%204%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh"
               target="_blank"
               rel="noopener noreferrer"
@@ -722,15 +765,16 @@ TƯ GIA</p>
                ================================================================ -->
           <div class="relative z-10 flex flex-col items-center gap-5 px-6 md:px-10 py-10 md:py-12 text-center">
             <h2
+              data-theme-text="primary"
               class="text-[20px] font-bold uppercase md:text-[24px]"
               style="font-family: 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.03em;"
             >
               DRESS CODE
             </h2>
-            <p class="text-sm md:text-base opacity-80" style="color: rgb(0, 34, 76);">
+            <p id="dresscode-subtitle" data-theme-text="primary" class="text-sm md:text-base opacity-80" style="color: rgb(0, 34, 76);">
               Trang phục dự tiệc
             </p>
-            <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+            <div id="dresscode-swatches" class="flex flex-wrap justify-center gap-4 md:gap-6">
               <span
                 class="w-10 h-10 md:w-12 md:h-12 rounded-full shadow-md"
                 style="background-color: rgb(120, 122, 108);"
@@ -768,6 +812,8 @@ TƯ GIA</p>
             </span>
 
             <div
+              data-theme-bg="primary"
+              data-theme-card-text="1"
               class="relative overflow-hidden rounded-[10px] px-6 py-9 shadow-[4px_4px_10px_rgba(0,0,0,0.25)]"
               style="background-color: #00224c; color: #ece4d8;"
             >
@@ -779,13 +825,14 @@ TƯ GIA</p>
 
               <div class="relative z-10">
                 <h2
+                  data-theme-card-text="1"
                   class="mb-8 text-center text-[20px] font-bold uppercase md:text-[24px]"
                   style="font-family: 'Times New Roman', serif; color: #ece4d8; letter-spacing: 0.03em;"
                 >
                   LỊCH TRÌNH NGÀY CƯỚI
                 </h2>
 
-                <ol class="relative mx-auto grid w-full max-w-[460px] grid-cols-[minmax(0,1fr)_16px_minmax(0,1fr)] items-center gap-x-6 md:gap-x-8 gap-y-8 md:gap-y-10">
+                <ol id="timeline-list" class="relative mx-auto grid w-full max-w-[460px] grid-cols-[minmax(0,1fr)_16px_minmax(0,1fr)] items-center gap-x-6 md:gap-x-8 gap-y-8 md:gap-y-10">
                   <!-- Vertical Timeline Line -->
                   <span
                     aria-hidden="true"
@@ -894,6 +941,7 @@ TƯ GIA</p>
                 class="flex flex-col items-center text-center"
               >
                 <h2
+                  data-theme-text="primary"
                   class="mb-6 text-[20px] font-bold uppercase md:text-[24px]"
                   style="font-family: 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.03em;"
                 >
@@ -906,6 +954,8 @@ TƯ GIA</p>
                     type="text"
                     required
                     placeholder="Nhập tên*"
+                    data-theme-border="primary"
+                    data-theme-text="primary"
                     class="w-full rounded-lg border px-4 py-3 text-sm outline-none transition-shadow focus:ring-2 focus:ring-[#00224c33]"
                     style="border-color: #00224c; color: #00224c;"
                   />
@@ -915,6 +965,8 @@ TƯ GIA</p>
                       id="wish-message-input"
                       required
                       placeholder="Nhập lời chúc*"
+                      data-theme-border="primary"
+                      data-theme-text="primary"
                       class="w-full h-[70px] md:h-[110px] rounded-lg border px-4 py-3 pr-12 text-sm outline-none resize-none transition-shadow focus:ring-2 focus:ring-[#00224c33]"
                       style="border-color: #00224c; color: #00224c;"
                     ></textarea>
@@ -931,7 +983,9 @@ TƯ GIA</p>
                   </div>
 
                   <button
+                    id="wish-submit-btn"
                     type="submit"
+                    data-theme-bg="primary"
                     class="w-full rounded-full px-6 py-2 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
                     style="background-color: #00224c;"
                   >
@@ -968,6 +1022,7 @@ TƯ GIA</p>
 
             <div class="relative z-10 flex flex-col items-center px-6 py-10 text-center">
               <h2
+                data-theme-text="primary"
                 class="mb-4 text-[20px] font-bold uppercase md:text-[24px]"
                 style="font-family: 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.03em;"
               >
@@ -1026,6 +1081,7 @@ TƯ GIA</p>
 
                 <!-- Pulse hint -->
                 <p
+                  data-theme-text="primary"
                   class="ienv-hint absolute bottom-0 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap font-medium"
                   style="color: rgb(0, 34, 76);"
                 >
@@ -1039,7 +1095,7 @@ TƯ GIA</p>
                10. FOOTER
                ================================================================ -->
           <footer class="relative z-10 px-6 pb-6 pt-2 text-center">
-            <p class="text-[11px] md:text-[13px]" style="color: rgb(0, 34, 76);">
+            <p id="footer-quote" data-theme-text="primary" class="text-[11px] md:text-[13px]" style="color: rgb(0, 34, 76);">
               Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi!
             </p>
             <div class="mt-4 pb-2 flex justify-center">
@@ -1051,7 +1107,7 @@ TƯ GIA</p>
               />
             </div>
             <div class="pb-3">
-              <span class="text-xs opacity-50" style="color: rgb(0, 34, 76);">♡ Tuấn Kiệt &amp; Minh Anh</span>
+              <span id="footer-brand" data-theme-text="primary" class="text-xs opacity-50" style="color: rgb(0, 34, 76);">♡ Tuấn Kiệt &amp; Minh Anh</span>
             </div>
           </footer>
         </div>
@@ -1070,6 +1126,7 @@ TƯ GIA</p>
       class="relative w-12 h-12 rounded-full shadow-lg cursor-pointer focus:outline-none transition-all hover:scale-110 active:scale-95 hover:shadow-xl"
     >
       <div
+        id="music-cd-disc"
         class="absolute inset-0 rounded-full animate-spin-cd"
         style="background: linear-gradient(to right bottom, rgba(0, 34, 76, 0.8), rgb(0, 34, 76), rgba(0, 34, 76, 0.867));"
       >
@@ -1320,10 +1377,11 @@ TƯ GIA</p>
        ====================================================================== -->
   <dialog id="gift-modal" class="native-modal">
     <div
+      id="gift-modal-card"
       class="w-[92vw] max-w-lg sm:max-w-xl rounded-2xl overflow-hidden shadow-2xl p-0 max-h-[90vh] overflow-y-auto animate-fade-in"
       style="background-color: rgb(247, 245, 238);"
     >
-      <div class="relative px-6 pt-6 pb-4 text-center" style="background-color: rgb(0, 34, 76);">
+      <div id="gift-modal-header" data-theme-bg="primary" class="relative px-6 pt-6 pb-4 text-center" style="background-color: rgb(0, 34, 76);">
         <h3
           class="text-[20px] font-bold uppercase text-white"
           style="font-family: 'Times New Roman', serif; text-shadow: rgba(0, 0, 0, 0.2) 1px 1px 2px;"
@@ -1343,26 +1401,29 @@ TƯ GIA</p>
       </div>
 
       <div
+        id="gift-modal-body"
+        data-theme-text="primary"
         class="p-4 sm:p-6 flex flex-col items-center gap-6 sm:flex-row sm:flex-wrap sm:items-start sm:justify-center"
         style="color: rgb(0, 34, 76);"
       >
         <!-- Groom QR -->
         <div class="flex flex-col items-center text-center flex-1 max-w-[180px] sm:max-w-none">
-          <h4 class="text-xs min-h-[2rem] font-medium flex items-center justify-center">
+          <h4 id="gift-groom-title" class="text-xs min-h-[2rem] font-medium flex items-center justify-center">
             Chú Rể - LY QUOC BAO
           </h4>
           <div
             class="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-xl p-2 shadow-lg flex items-center justify-center mt-1"
             style="border: 2px solid rgba(0, 34, 76, 0.125);"
           >
-            <img src="./assets/images/qr/qr-groom.png" alt="QR Chú Rể - LY QUOC BAO" class="w-full h-full object-contain" />
+            <img id="gift-groom-qr" src="./assets/images/qr/qr-groom.png" alt="QR Chú Rể - LY QUOC BAO" class="w-full h-full object-contain" />
           </div>
           <div class="mt-2.5 text-[10px] space-y-0.5">
-            <p>Vietcombank</p>
-            <p class="font-mono">1017788990</p>
-            <p class="font-semibold">LY QUOC BAO</p>
+            <p id="gift-groom-bank">Vietcombank</p>
+            <p id="gift-groom-acc" class="font-mono">1017788990</p>
+            <p id="gift-groom-holder" class="font-semibold">LY QUOC BAO</p>
           </div>
           <a
+            id="gift-groom-dl"
             href="./assets/images/qr/qr-groom.png"
             download="QR-Chu-Re-LY-QUOC-BAO.png"
             class="mt-2.5 inline-flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full cursor-pointer transition-opacity hover:opacity-80"
@@ -1377,21 +1438,22 @@ TƯ GIA</p>
 
         <!-- Bride QR -->
         <div class="flex flex-col items-center text-center flex-1 max-w-[180px] sm:max-w-none">
-          <h4 class="text-xs min-h-[2rem] font-medium flex items-center justify-center">
+          <h4 id="gift-bride-title" class="text-xs min-h-[2rem] font-medium flex items-center justify-center">
             Cô Dâu - DINH DIEU LINH
           </h4>
           <div
             class="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-xl p-2 shadow-lg flex items-center justify-center mt-1"
             style="border: 2px solid rgba(0, 34, 76, 0.125);"
           >
-            <img src="./assets/images/qr/qr-bride.png" alt="QR Cô Dâu - DINH DIEU LINH" class="w-full h-full object-contain" />
+            <img id="gift-bride-qr" src="./assets/images/qr/qr-bride.png" alt="QR Cô Dâu - DINH DIEU LINH" class="w-full h-full object-contain" />
           </div>
           <div class="mt-2.5 text-[10px] space-y-0.5">
-            <p>Techcombank</p>
-            <p class="font-mono">1904455660</p>
-            <p class="font-semibold">DINH DIEU LINH</p>
+            <p id="gift-bride-bank">Techcombank</p>
+            <p id="gift-bride-acc" class="font-mono">1904455660</p>
+            <p id="gift-bride-holder" class="font-semibold">DINH DIEU LINH</p>
           </div>
           <a
+            id="gift-bride-dl"
             href="./assets/images/qr/qr-bride.png"
             download="QR-Co-Dau-DINH-DIEU-LINH.png"
             class="mt-2.5 inline-flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full cursor-pointer transition-opacity hover:opacity-80"
@@ -1410,6 +1472,7 @@ TƯ GIA</p>
   <!-- Toast Container -->
   <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[10000] flex flex-col gap-2 pointer-events-none"></div>
 
+  <script src="./config.js"></script>
   <script src="./script.js"></script>
 </body>
 </html>
