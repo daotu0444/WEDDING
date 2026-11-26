@@ -1,0 +1,1415 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Thiệp Cưới Tuấn Kiệt &amp; Minh Anh - Minimalism Lam Đậm</title>
+  <link rel="preload" href="./assets/fonts/ViaodaLibre-Regular.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="preload" href="./assets/fonts/Lora-Regular.ttf" as="font" type="font/ttf" crossorigin />
+  <link rel="preload" href="./assets/images/theme/paper.webp" as="image" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body class="intro-locked bg-white">
+  <!-- ======================================================================
+       INTRO COVER OVERLAY
+       ====================================================================== -->
+  <div
+    id="intro-overlay"
+    data-landing-screenshot-id="invite-envelope"
+    class="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
+    style="background: linear-gradient(to bottom right, #073268, #00224c, #001531);"
+  >
+    <!-- Falling blossoms background -->
+    <div id="ambient-blossoms" class="absolute inset-0 pointer-events-none overflow-hidden" style="z-index: 1;"></div>
+
+    <!-- Centered envelope card -->
+    <div id="intro-card-wrap" class="relative px-4" style="z-index: 10;">
+      <div class="relative w-[310px] sm:w-[340px] md:w-[520px] lg:w-[600px]">
+        <!-- Wax seal -->
+        <div
+          id="intro-seal"
+          class="absolute left-1/2 rounded-full flex items-center justify-center"
+          style="top: 50px; width: 56px; height: 56px; transform: translate(-50%, -50%); background: radial-gradient(circle at 30% 30%, #00224c, rgb(0, 4, 46)); --shadow-color: rgba(0, 34, 76, 0.5); box-shadow: 0 4px 20px rgba(0, 34, 76, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.3); z-index: 30; animation: seal-pulse 2s ease-in-out infinite;"
+        >
+          <svg style="fill: #ece4d8;" viewBox="0 0 24 24" class="w-7 h-7" aria-hidden="true">
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path>
+          </svg>
+        </div>
+
+        <!-- Card box -->
+        <div
+          class="relative rounded-lg"
+          style="box-shadow: 0 25px 60px -12px rgba(0, 0, 0, 0.45), 0 8px 24px rgba(0, 0, 0, 0.2), 0 0 40px rgba(0, 34, 76, 0.15);"
+        >
+          <!-- Paper & corner hydrangea illustrations -->
+          <div
+            class="absolute inset-0 rounded-lg overflow-hidden"
+            style="background: rgba(247, 245, 238, 0.96); border: 1px solid rgba(0, 34, 76, 0.15); clip-path: inset(0 round 8px);"
+          >
+            <img
+              src="./assets/images/theme/flower2-decoration.webp"
+              alt=""
+              class="absolute pointer-events-none h-36 md:h-[280px] w-auto max-w-none top-[-5%] md:top-[-2%] left-[-10px] -translate-x-[6%] md:-translate-x-[11%] opacity-80 rotate-[25deg]"
+            />
+            <img
+              src="./assets/images/theme/flower2-decoration.webp"
+              alt=""
+              class="absolute pointer-events-none h-36 md:h-[280px] w-auto max-w-none bottom-[-5%] md:bottom-[35%] right-[-10px] translate-x-[6%] md:translate-x-[11%] -scale-x-100 opacity-80 -rotate-[25deg]"
+            />
+          </div>
+
+          <!-- Card content -->
+          <div class="relative z-10 text-center px-6 pt-28 pb-14 md:pt-24 md:pb-8">
+            <h1
+              class="mb-2 flex flex-col items-center leading-tight text-3xl sm:text-4xl"
+              style="color: #00224c; font-family: 'Viaoda Libre', 'EB Garamond', serif;"
+            >
+              <span class="block w-full text-center">Tuấn Kiệt</span>
+              <span
+                class="block w-full text-center text-lg leading-none sm:text-xl my-0.5"
+                style="font-family: 'Baskerville', 'Times New Roman', serif;"
+              >&amp;</span>
+              <span class="block w-full text-center">Minh Anh</span>
+            </h1>
+
+            <div class="flex items-center justify-center gap-3 mb-2">
+              <span class="w-10 h-px" style="background: linear-gradient(to right, transparent, #00224c);"></span>
+              <span class="text-sm" style="color: #00224c; opacity: 0.7;">❦</span>
+              <span class="w-10 h-px" style="background: linear-gradient(to left, transparent, #00224c);"></span>
+            </div>
+
+            <div
+              class="text-[18px] mb-5 flex flex-col items-center"
+              style="color: rgba(0, 34, 76, 0.72); font-family: 'Lora', 'Times New Roman', serif;"
+            >
+              19 tháng 12, 2026
+            </div>
+
+            <div class="mb-6 max-w-[300px] md:max-w-[380px] lg:max-w-[440px] mx-auto">
+              <p
+                class="text-[18px] font-light mb-2"
+                style="color: #00224c; font-family: 'Lora', 'Times New Roman', serif;"
+              >
+                Thân Mời
+              </p>
+            </div>
+
+            <button
+              id="open-invite-btn"
+              type="button"
+              class="relative px-8 py-2.5 text-lg font-semibold sm:font-medium rounded-full shadow-lg no-underline cursor-pointer flex w-fit items-center justify-center mx-auto overflow-hidden transition-transform hover:scale-[1.03] active:scale-[0.98]"
+              style="background-color: #00224c; color: #ece4d8; box-shadow: 0 4px 14px rgba(0, 34, 76, 0.35); font-family: 'Lora', 'Times New Roman', serif;"
+            >
+              <span class="relative z-10">Mở thiệp</span>
+              <span
+                aria-hidden="true"
+                class="absolute top-0 h-full w-8 pointer-events-none"
+                style="background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.4), transparent); animation: shine 3s ease-in-out infinite;"
+              ></span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======================================================================
+       MAIN INVITATION PAGE
+       ====================================================================== -->
+  <div class="min-h-screen w-full bg-white">
+    <main class="min-h-screen w-full">
+      <div class="flex w-full justify-center overflow-x-clip bg-white">
+        <div
+          data-showcase-root
+          class="relative w-full max-w-[480px] md:max-w-[900px] md:mx-auto overflow-hidden md:border md:border-[#00224c22] isolate"
+          style="background-color: rgb(247, 245, 238); color: rgb(0, 34, 76);"
+        >
+          <!-- Repeating paper texture overlay -->
+          <div
+            aria-hidden="true"
+            class="pointer-events-none absolute inset-0 z-0"
+            style="background-image: url('./assets/images/theme/paper.webp'); background-size: 666px 1000px; background-repeat: repeat; background-position: left top; mix-blend-mode: multiply; opacity: 0.5;"
+          ></div>
+
+          <!-- ================================================================
+               1. HERO BANNER
+               ================================================================ -->
+          <header class="relative z-10 flex flex-col items-center overflow-x-clip px-6 pt-10 pb-14 text-center">
+            <!-- Castle sketch backdrop -->
+            <img
+              src="./assets/images/theme/castle-background.webp"
+              alt=""
+              aria-hidden="true"
+              class="pointer-events-none absolute max-w-none object-contain -left-[61%] top-0 -scale-x-100 w-[212%]"
+              style="opacity: 0.2;"
+            />
+
+            <!-- Top gold ornament -->
+            <img
+              src="./assets/images/theme/goldenline2-decoration.webp"
+              alt=""
+              aria-hidden="true"
+              class="relative z-10 mb-3 block w-[82px] max-w-none object-contain md:w-[104px]"
+            />
+
+            <!-- Save The Date -->
+            <p
+              class="relative z-10 whitespace-pre-line text-[15px] uppercase md:text-[18px]"
+              style="font-family: 'Playfair Display', 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.14em; font-weight: 600;"
+            >Save The Date</p>
+
+            <!-- Envelope & floating polaroids assembly -->
+            <div class="relative z-10 mt-[30.6%] w-[64.2%] max-w-[300px] md:max-w-[380px]">
+              <div class="relative aspect-[283/328]">
+                <!-- Left hydrangea cluster -->
+                <img
+                  src="./assets/images/theme/flower-background.webp"
+                  alt=""
+                  aria-hidden="true"
+                  class="pointer-events-none absolute -left-[32.9%] top-0 z-[15] w-[57.6%] max-w-none drop-shadow-[3px_4px_3px_rgba(0,0,0,0.3)]"
+                />
+
+                <!-- Envelope back -->
+                <img
+                  src="./assets/images/theme/envelope-background.webp"
+                  alt=""
+                  aria-hidden="true"
+                  class="pointer-events-none absolute inset-0 z-10 w-full max-w-none"
+                />
+
+                <!-- Polaroid 1 (Left) -->
+                <div
+                  class="absolute left-[0.9%] top-[-15.7%] z-20 w-[67.4%]"
+                  style="animation: dbFloat 6.5s ease-in-out 0.2s infinite;"
+                >
+                  <div class="aspect-[191/255] rotate-[-9.93deg] border-[6px] border-white bg-white shadow-[2px_2px_4px_rgba(0,0,0,0.25)] md:border-8 overflow-hidden">
+                    <img
+                      src="./assets/images/photos/hero-1.webp"
+                      alt="Ảnh cưới Tuấn Kiệt & Minh Anh 1"
+                      class="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                <!-- Polaroid 2 (Right) -->
+                <div
+                  class="absolute left-[31%] top-[8.8%] z-[21] w-[59.2%]"
+                  style="animation: dbFloat 7s ease-in-out 0.8s infinite;"
+                >
+                  <div class="aspect-[167/219] rotate-[17.26deg] border-[6px] border-white bg-white shadow-[2px_2px_4px_rgba(0,0,0,0.25)] md:border-8 overflow-hidden">
+                    <img
+                      src="./assets/images/photos/hero-2.webp"
+                      alt="Ảnh cưới Tuấn Kiệt & Minh Anh 2"
+                      class="h-full w-full object-cover"
+                    />
+                  </div>
+                </div>
+
+                <!-- Envelope front pocket + gold wax seal -->
+                <img
+                  src="./assets/images/theme/envelope-cover.webp"
+                  alt=""
+                  aria-hidden="true"
+                  class="pointer-events-none absolute left-0 top-[42.7%] z-30 w-full max-w-none"
+                />
+
+                <!-- Right floating flower -->
+                <img
+                  src="./assets/images/theme/flower2-decoration.webp"
+                  alt=""
+                  aria-hidden="true"
+                  class="pointer-events-none absolute left-[75.3%] top-[33.8%] z-[35] w-[50.5%] max-w-none drop-shadow-[3px_4px_3px_rgba(0,0,0,0.3)]"
+                  style="animation: dbFloat 5s ease-in-out 0s infinite;"
+                />
+              </div>
+            </div>
+
+            <!-- Hero couple names -->
+            <div class="relative z-10 mt-[24%] flex flex-col items-center gap-[19px]">
+              <span
+                class="text-[clamp(36px,10.5vw,45px)] uppercase leading-none md:text-[56px]"
+                style="font-family: 'Viaoda Libre', 'The Nautigal', cursive; color: rgb(0, 34, 76);"
+              >Tuấn Kiệt</span>
+              <span
+                aria-hidden="true"
+                class="pointer-events-none absolute top-[37%] -translate-y-1/2 text-[100px] leading-none md:text-[128px]"
+                style="font-family: 'The Nautigal', cursive; color: rgba(0, 34, 76, 0.15);"
+              >&amp;</span>
+              <span
+                class="text-[clamp(36px,10.5vw,45px)] uppercase leading-none md:text-[56px]"
+                style="font-family: 'Viaoda Libre', 'The Nautigal', cursive; color: rgb(0, 34, 76);"
+              >Minh Anh</span>
+            </div>
+          </header>
+
+          <!-- ================================================================
+               2. CEREMONY DETAILS CARD
+               ================================================================ -->
+          <section class="relative z-10 mx-auto w-[88%] max-w-[420px] md:max-w-[560px]">
+            <!-- Left flanking flower -->
+            <span
+              data-parallax-flower="1"
+              aria-hidden="true"
+              class="parallax-flower pointer-events-none absolute -left-[30%] top-[41.7%] z-20 w-[41.7%] block"
+            >
+              <img
+                src="./assets/images/theme/flower3-decoration.webp"
+                alt=""
+                class="w-full max-w-none drop-shadow-[3px_4px_3px_rgba(0,0,0,0.3)]"
+                style="animation: dbFloat 6s ease-in-out 0.4s infinite;"
+              />
+            </span>
+
+            <!-- Right flanking flower -->
+            <span
+              data-parallax-flower="-1"
+              aria-hidden="true"
+              class="parallax-flower pointer-events-none absolute left-[85%] top-[28.7%] z-20 w-[37%] block"
+            >
+              <img
+                src="./assets/images/theme/flower2-decoration.webp"
+                alt=""
+                class="w-full max-w-none drop-shadow-[3px_4px_3px_rgba(0,0,0,0.3)]"
+                style="animation: dbFloat 5.5s ease-in-out 0.6s infinite;"
+              />
+            </span>
+
+            <!-- Dark Navy Card -->
+            <div
+              class="relative overflow-hidden rounded-[13px] px-5 pb-10 pt-9 text-center shadow-[4px_4px_10px_rgba(0,0,0,0.25)]"
+              style="background-color: #00224c; color: #ece4d8;"
+            >
+              <!-- Card Paper Texture -->
+              <div
+                aria-hidden="true"
+                class="pointer-events-none absolute inset-0 z-0"
+                style="background-image: url('./assets/images/theme/paper.webp'); background-size: 666px 1000px; background-repeat: repeat; mix-blend-mode: multiply; opacity: 0.4;"
+              ></div>
+
+              <div class="relative z-10">
+                <h2
+                  class="text-[20px] font-bold uppercase md:text-[24px]"
+                  style="font-family: 'Times New Roman', serif; color: #ece4d8; letter-spacing: 0.03em;"
+                >
+                  THÔNG TIN LỄ CƯỚI
+                </h2>
+
+                <!-- Parents Grid -->
+                <div class="mt-6 grid grid-cols-[1fr_auto_1fr] grid-rows-[repeat(4,auto)] justify-center gap-x-4 sm:gap-x-8 gap-y-[3px] text-[11px] sm:text-[12px] md:text-[13px]">
+                  <!-- Row 1 -->
+                  <p class="uppercase tracking-wider opacity-75" style="font-family: 'Times New Roman', serif;">Ông Bà</p>
+                  <div class="row-span-4 flex items-center justify-center">
+                    <span class="block h-[50px] w-[1px]" style="background-color: rgba(236, 228, 216, 0.4);"></span>
+                  </div>
+                  <p class="uppercase tracking-wider opacity-75" style="font-family: 'Times New Roman', serif;">Ông Bà</p>
+
+                  <!-- Row 2 -->
+                  <p class="font-medium">Lý Văn Hoà</p>
+                  <p class="font-medium">Đinh Hữu Nam</p>
+
+                  <!-- Row 3 -->
+                  <p class="font-medium">Trịnh Thị Bích Vân</p>
+                  <p class="font-medium">Phan Thị Kim Yến</p>
+
+                  <!-- Row 4 -->
+                  <p class="mt-1 text-[10px] md:text-[11px] leading-snug opacity-70">
+                    Phường Tân Định, Quận 1, TP. Hồ Chí Minh
+                  </p>
+                  <p class="mt-1 text-[10px] md:text-[11px] leading-snug opacity-70">
+                    Phường Thảo Điền, TP. Thủ Đức, TP. Hồ Chí Minh
+                  </p>
+                </div>
+
+                <!-- Horizontal divider -->
+                <div class="mx-auto my-6 h-px w-24" style="background-color: rgba(236, 228, 216, 0.35);"></div>
+
+                <!-- Invitation announcement -->
+                <p
+                  class="mx-auto max-w-[260px] md:max-w-[340px] text-[11px] md:text-[12px] uppercase tracking-[0.12em] leading-relaxed opacity-85"
+                  style="font-family: 'Times New Roman', serif;"
+                >
+                  TRÂN TRỌNG BÁO TIN LỄ THÀNH HÔN CỦA CON CHÚNG TÔI
+                </p>
+
+                <!-- Couple names & birth order -->
+                <div class="mt-5 flex flex-col items-center">
+                  <h3
+                    class="text-[36px] md:text-[40px] leading-tight"
+                    style="font-family: 'Viaoda Libre', 'The Nautigal', cursive; color: #ece4d8;"
+                  >
+                    Trần Tuấn Kiệt
+                  </h3>
+                  <span
+                    class="mt-0.5 text-[10px] uppercase tracking-[0.14em] opacity-75"
+                    style="font-family: 'Uchen', 'Noto Serif', serif;"
+                  >
+                    Trưởng Nam
+                  </span>
+
+                  <span
+                    class="my-1 text-[35px] leading-none opacity-90"
+                    style="font-family: 'Ms Madi', 'The Nautigal', cursive; color: #ece4d8;"
+                  >
+                    &amp;
+                  </span>
+
+                  <h3
+                    class="text-[36px] md:text-[40px] leading-tight"
+                    style="font-family: 'Viaoda Libre', 'The Nautigal', cursive; color: #ece4d8;"
+                  >
+                    Lê Minh Anh
+                  </h3>
+                  <span
+                    class="mt-0.5 text-[10px] uppercase tracking-[0.14em] opacity-75"
+                    style="font-family: 'Uchen', 'Noto Serif', serif;"
+                  >
+                    Út Nữ
+                  </span>
+                </div>
+
+                <!-- Ceremony Time & Date -->
+                <div class="mt-7">
+                  <p
+                    class="whitespace-pre-line text-[11px] md:text-[12px] uppercase tracking-[0.1em] leading-relaxed opacity-80"
+                    style="font-family: 'Times New Roman', serif;"
+                  >LỄ THÀNH HÔN ĐƯỢC CỬ HÀNH TẠI
+TƯ GIA</p>
+
+                  <div class="mt-4 flex items-center justify-center gap-3 text-[12px] md:text-[13px] tracking-[0.1em] uppercase">
+                    <span>VÀO LÚC 09:00</span>
+                    <span class="h-3.5 w-px" style="background-color: rgba(236, 228, 216, 0.45);"></span>
+                    <span>THỨ BẢY</span>
+                  </div>
+
+                  <div class="mt-3 flex items-center justify-center gap-4">
+                    <span
+                      class="text-[40px] md:text-[46px] font-normal leading-none"
+                      style="font-family: Baskerville, 'Times New Roman', serif;"
+                    >10</span>
+                    <span class="h-[46px] w-px" style="background-color: rgba(236, 228, 216, 0.45);"></span>
+                    <div class="flex flex-col items-start text-left text-[12px] md:text-[14px] tracking-[0.1em] uppercase leading-snug">
+                      <span>THÁNG 10</span>
+                      <span>2026</span>
+                    </div>
+                  </div>
+
+                  <p class="mt-3 text-[12px] md:text-[13px] italic opacity-75">
+                    (Tức ngày 1 tháng 9 năm Bính Ngọ)
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================================================================
+               3. 3D PHOTO ALBUM CAROUSEL
+               ================================================================ -->
+          <div class="relative z-10 overflow-x-clip">
+            <div class="relative z-10 flex flex-col items-center px-6 pb-10 pt-10">
+              <h2
+                class="text-[20px] font-bold uppercase md:text-[24px]"
+                style="font-family: 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.03em;"
+              >
+                ALBUM ẢNH
+              </h2>
+
+              <div class="mt-5 w-full max-w-[380px] md:max-w-[600px]">
+                <div
+                  id="album-stage"
+                  class="relative h-[340px] md:h-[520px] touch-pan-y select-none"
+                >
+                  <!-- Desktop prev button -->
+                  <button
+                    id="album-prev-btn"
+                    type="button"
+                    aria-label="Previous photo"
+                    class="hidden md:flex absolute left-0 top-1/2 -translate-y-1/2 z-[200] w-8 h-8 items-center justify-center rounded-full bg-white/75 hover:bg-white text-[#00224c] shadow-md transition-colors cursor-pointer"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"></path>
+                    </svg>
+                  </button>
+
+                  <!-- Desktop next button -->
+                  <button
+                    id="album-next-btn"
+                    type="button"
+                    aria-label="Next photo"
+                    class="hidden md:flex absolute right-0 top-1/2 -translate-y-1/2 z-[200] w-8 h-8 items-center justify-center rounded-full bg-white/75 hover:bg-white text-[#00224c] shadow-md transition-colors cursor-pointer"
+                  >
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 4.5l7.5 7.5-7.5 7.5"></path>
+                    </svg>
+                  </button>
+
+                  <!-- 3D Perspective Track -->
+                  <div
+                    id="album-track"
+                    class="relative w-full h-full flex items-center justify-center"
+                    style="perspective: 1000px; transform-style: preserve-3d;"
+                  ></div>
+                </div>
+
+                <!-- Counter -->
+                <div class="flex justify-center mt-3">
+                  <span id="album-counter" class="text-sm tabular-nums opacity-60">1 / 9</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               4. RECEPTION, COUNTDOWN, CALENDAR & RSVP BUTTON
+               ================================================================ -->
+          <section class="relative z-10 mx-auto mb-4 w-[88%] max-w-[420px] md:max-w-[560px]">
+            <!-- Left flower -->
+            <span
+              data-parallax-flower="1"
+              aria-hidden="true"
+              class="parallax-flower pointer-events-none absolute -left-[43.9%] top-[22.8%] z-20 w-[54.2%] block"
+            >
+              <img
+                src="./assets/images/theme/flower4-decoration.webp"
+                alt=""
+                class="w-full max-w-none drop-shadow-[3px_4px_3px_rgba(0,0,0,0.3)]"
+                style="animation: dbFloat 6s ease-in-out 0.3s infinite;"
+              />
+            </span>
+
+            <!-- Right flower -->
+            <span
+              data-parallax-flower="-1"
+              aria-hidden="true"
+              class="parallax-flower pointer-events-none absolute left-[83.7%] bottom-[5%] z-20 w-[37.6%] block"
+            >
+              <img
+                src="./assets/images/theme/flower5-decoration.webp"
+                alt=""
+                class="w-full max-w-none drop-shadow-[3px_4px_3px_rgba(0,0,0,0.3)]"
+                style="animation: dbFloat 5.4s ease-in-out 0.9s infinite;"
+              />
+            </span>
+
+            <!-- Dark Navy Reception Card -->
+            <div
+              class="relative overflow-hidden rounded-[10px] px-5 py-9 text-center shadow-[4px_4px_10px_rgba(0,0,0,0.25)]"
+              style="background-color: #00224c; color: #ece4d8;"
+            >
+              <div
+                aria-hidden="true"
+                class="pointer-events-none absolute inset-0 z-0"
+                style="background-image: url('./assets/images/theme/paper.webp'); background-size: 666px 1000px; background-repeat: repeat; mix-blend-mode: multiply; opacity: 0.4;"
+              ></div>
+
+              <div class="relative z-10">
+                <h2
+                  class="text-[20px] font-bold uppercase md:text-[24px]"
+                  style="font-family: 'Times New Roman', serif; color: #ece4d8; letter-spacing: 0.03em;"
+                >
+                  THÔNG TIN TIỆC CƯỚI
+                </h2>
+
+                <p class="mt-3 text-[13px] md:text-[14px] opacity-80">
+                  Tiệc cưới sẽ diễn ra vào lúc:
+                </p>
+
+                <div class="mt-3 flex items-center justify-center gap-3 text-[12px] md:text-[13px] tracking-[0.1em] uppercase">
+                  <span>18:30</span>
+                  <span class="h-3.5 w-px" style="background-color: rgba(236, 228, 216, 0.45);"></span>
+                  <span>THỨ BẢY</span>
+                </div>
+
+                <div class="mt-3 flex items-center justify-center gap-4">
+                  <span
+                    class="text-[46px] md:text-[52px] font-normal leading-none"
+                    style="font-family: Baskerville, 'Times New Roman', serif;"
+                  >19</span>
+                  <span class="h-[52px] w-px" style="background-color: rgba(236, 228, 216, 0.45);"></span>
+                  <div class="flex flex-col items-start text-left text-[12px] md:text-[14px] tracking-[0.1em] uppercase leading-snug">
+                    <span>THÁNG 12</span>
+                    <span>2026</span>
+                  </div>
+                </div>
+
+                <p class="mt-2.5 text-[12px] md:text-[13px] italic opacity-75">
+                  (Tức ngày 11 tháng 11 năm Bính Ngọ)
+                </p>
+
+                <!-- Quick times row -->
+                <div class="mt-5 flex items-center justify-center gap-8 text-[12px] md:text-[13px]">
+                  <div class="flex flex-col items-center">
+                    <span class="opacity-70">Đón khách</span>
+                    <span class="mt-0.5 font-semibold tracking-wider">17:30</span>
+                  </div>
+                  <span class="h-7 w-px" style="background-color: rgba(236, 228, 216, 0.35);"></span>
+                  <div class="flex flex-col items-center">
+                    <span class="opacity-70">Khai tiệc</span>
+                    <span class="mt-0.5 font-semibold tracking-wider">18:30</span>
+                  </div>
+                </div>
+
+                <!-- Live Countdown -->
+                <div class="mt-5">
+                  <p class="text-[12px] uppercase tracking-[0.14em] opacity-75">Cùng đếm ngược</p>
+                  <p
+                    id="countdown-display"
+                    class="mt-1 text-[14px] md:text-[16px] font-semibold tracking-wide tabular-nums"
+                  >
+                    23 ngày 02 giờ 00 phút 00 giây
+                  </p>
+                </div>
+
+                <!-- Cream Calendar Card -->
+                <div
+                  class="mt-4 mx-auto w-fit rounded-[10px] px-4 pb-4 pt-2 shadow-inner"
+                  style="background-color: #ece4d8; color: #00224c;"
+                >
+                  <div class="w-[260px] sm:w-[280px] md:w-[330px]">
+                    <!-- Calendar header -->
+                    <div
+                      class="py-1.5 text-[25px] leading-tight"
+                      style="font-family: 'The Nautigal', cursive; border-bottom: 1px solid rgba(0, 34, 76, 0.27);"
+                    >
+                      Tháng 12 / 2026
+                    </div>
+
+                    <!-- Weekday row -->
+                    <div
+                      class="grid grid-cols-7 py-1.5 text-[10px] md:text-[11px] font-semibold uppercase tracking-wider"
+                      style="border-bottom: 2px solid #00224c;"
+                    >
+                      <span class="opacity-60">T2</span>
+                      <span class="opacity-60">T3</span>
+                      <span class="opacity-60">T4</span>
+                      <span class="opacity-60">T5</span>
+                      <span class="opacity-60">T6</span>
+                      <span class="opacity-60">T7</span>
+                      <span class="opacity-60">CN</span>
+                    </div>
+
+                    <!-- Days grid (Dec 1, 2026 is Tuesday -> 1 empty slot before day 1) -->
+                    <div class="grid grid-cols-7 gap-y-0.5 px-1 py-2 text-[12px] md:text-[13px] tabular-nums">
+                      <span class="h-[30px] md:h-[34px]"></span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">1</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">2</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">3</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">4</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">5</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">6</span>
+
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">7</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">8</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">9</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">10</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">11</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">12</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">13</span>
+
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">14</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">15</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">16</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">17</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">18</span>
+                      <span class="relative flex h-[30px] md:h-[34px] items-center justify-center">
+                        <span class="relative flex items-center justify-center w-[26px] h-[24px] md:w-[30px] md:h-[28px]">
+                          <svg viewBox="0 0 24 22" class="absolute inset-0 w-full h-full drop-shadow-sm" fill="#00224c" aria-hidden="true">
+                            <path d="M12 21C12 21 1.5 13.5 1.5 7.5C1.5 4.46 3.96 2 7 2C8.76 2 10.35 2.81 11.4 4.09L12 4.8L12.6 4.09C13.65 2.81 15.24 2 17 2C20.04 2 22.5 4.46 22.5 7.5C22.5 13.5 12 21 12 21Z"></path>
+                          </svg>
+                          <span class="relative z-10 text-[11px] md:text-[12px] font-bold text-[#ece4d8]">19</span>
+                        </span>
+                      </span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">20</span>
+
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">21</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">22</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">23</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">24</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">25</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">26</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">27</span>
+
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">28</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">29</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">30</span>
+                      <span class="flex h-[30px] md:h-[34px] items-center justify-center">31</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Add to Google Calendar Link -->
+                <div class="mt-3">
+                  <a
+                    href="https://www.google.com/calendar/render?action=TEMPLATE&text=%C4%90%C3%A1m%20c%C6%B0%E1%BB%9Bi%20Tr%E1%BA%A7n%20Tu%E1%BA%A5n%20Ki%E1%BB%87t%20%26%20L%C3%AA%20Minh%20Anh&dates=20261219T113000Z/20261219T133000Z&ctz=Asia/Ho_Chi_Minh&details=Ti%E1%BB%87c%20c%C6%B0%E1%BB%9Bi%20c%E1%BB%A7a%20Tr%E1%BA%A7n%20Tu%E1%BA%A5n%20Ki%E1%BB%87t%20%26%20L%C3%AA%20Minh%20Anh%20t%E1%BA%A1i%20Nh%C3%A0%20H%C3%A0ng%20Ti%E1%BB%87c%20C%C6%B0%E1%BB%9Bi%20Riverside%20Palace%2C%20360D%20B%E1%BA%BFn%20V%C3%A2n%20%C4%90%E1%BB%93n%2C%20Ph%C6%B0%E1%BB%9Dng%201%2C%20Qu%E1%BA%ADn%204%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh&location=Nh%C3%A0%20H%C3%A0ng%20Ti%E1%BB%87c%20C%C6%B0%E1%BB%9Bi%20Riverside%20Palace%2C%20360D%20B%E1%BA%BFn%20V%C3%A2n%20%C4%90%E1%BB%93n%2C%20Ph%C6%B0%E1%BB%9Dng%201%2C%20Qu%E1%BA%ADn%204%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="inline-flex items-center justify-center text-sm underline underline-offset-4 transition-opacity hover:opacity-80"
+                    style="color: #ece4d8;"
+                  >
+                    Thêm vào lịch
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <!-- RSVP Button below Reception Card -->
+            <div class="mt-6 flex justify-center">
+              <button
+                id="open-rsvp-btn"
+                type="button"
+                class="inline-flex items-center justify-center rounded-full px-7 py-1.5 text-[13px] uppercase tracking-wide transition-transform hover:scale-[1.03] cursor-pointer shadow-md"
+                style="background-color: rgb(0, 34, 76); color: rgb(222, 217, 215);"
+              >
+                XÁC NHẬN THAM DỰ
+              </button>
+            </div>
+          </section>
+
+          <!-- ================================================================
+               5. VENUE & MAP
+               ================================================================ -->
+          <section
+            data-landing-screenshot-id="invite-map"
+            class="relative z-10 flex w-full flex-col items-center px-6 pb-8 pt-8 text-center"
+          >
+            <h3
+              class="text-[20px] font-bold uppercase md:text-[24px]"
+              style="font-family: 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.03em;"
+            >
+              Tiệc cưới sẽ tổ chức tại
+            </h3>
+
+            <p
+              class="mt-2 max-w-[250px] md:max-w-[440px] text-[12px] md:text-[14px] leading-relaxed"
+              style="color: rgba(1, 47, 83, 0.72);"
+            >
+              Nhà Hàng Tiệc Cưới Riverside Palace, 360D Bến Vân Đồn, Phường 1, Quận 4, TP. Hồ Chí Minh
+            </p>
+
+            <iframe
+              title="Bản đồ địa điểm tổ chức tiệc cưới Riverside Palace"
+              src="https://www.openstreetmap.org/export/embed.html?bbox=106.6968%2C10.7582%2C106.7052%2C10.7646&layer=mapnik&marker=10.7614%2C106.7010"
+              loading="lazy"
+              referrerpolicy="no-referrer-when-downgrade"
+              class="mt-3 h-[268px] w-full max-w-[338px] overflow-hidden rounded-[15px] border border-[#00224c22] shadow-sm md:h-[380px] md:max-w-[560px]"
+            ></iframe>
+
+            <a
+              href="https://www.google.com/maps/dir/?api=1&destination=Nh%C3%A0%20H%C3%A0ng%20Ti%E1%BB%87c%20C%C6%B0%E1%BB%9Bi%20Riverside%20Palace%2C%20360D%20B%E1%BA%BFn%20V%C3%A2n%20%C4%90%E1%BB%93n%2C%20Ph%C6%B0%E1%BB%9Dng%201%2C%20Qu%E1%BA%ADn%204%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="mt-3 inline-flex items-center gap-2 rounded-full px-5 py-2 text-sm md:text-base font-semibold transition-opacity hover:opacity-80"
+              style="color: rgba(1, 47, 83, 0.72);"
+            >
+              <svg
+                class="h-4 w-4 shrink-0"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                aria-hidden="true"
+              >
+                <polygon points="3 11 22 2 13 21 11 13 3 11"></polygon>
+              </svg>
+              <span>Chỉ đường</span>
+            </a>
+          </section>
+
+          <!-- ================================================================
+               6. DRESS CODE
+               ================================================================ -->
+          <div class="relative z-10 flex flex-col items-center gap-5 px-6 md:px-10 py-10 md:py-12 text-center">
+            <h2
+              class="text-[20px] font-bold uppercase md:text-[24px]"
+              style="font-family: 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.03em;"
+            >
+              DRESS CODE
+            </h2>
+            <p class="text-sm md:text-base opacity-80" style="color: rgb(0, 34, 76);">
+              Trang phục dự tiệc
+            </p>
+            <div class="flex flex-wrap justify-center gap-4 md:gap-6">
+              <span
+                class="w-10 h-10 md:w-12 md:h-12 rounded-full shadow-md"
+                style="background-color: rgb(120, 122, 108);"
+                title="#787a6c"
+              ></span>
+              <span
+                class="w-10 h-10 md:w-12 md:h-12 rounded-full shadow-md"
+                style="background-color: rgb(120, 105, 160);"
+                title="#7869a0"
+              ></span>
+              <span
+                class="w-10 h-10 md:w-12 md:h-12 rounded-full shadow-md"
+                style="background-color: rgb(196, 181, 221);"
+                title="#c4b5dd"
+              ></span>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               7. WEDDING TIMELINE
+               ================================================================ -->
+          <section class="relative z-10 mx-auto my-4 w-[88%] max-w-[420px] md:max-w-[560px]">
+            <!-- Top-right flower -->
+            <span
+              data-parallax-flower="-1"
+              aria-hidden="true"
+              class="parallax-flower pointer-events-none absolute left-[84.9%] top-[-10%] z-20 w-[40.8%] block"
+            >
+              <img
+                src="./assets/images/theme/flower6-decoration.webp"
+                alt=""
+                class="w-full max-w-none drop-shadow-[3px_4px_3px_rgba(0,0,0,0.3)]"
+                style="animation: dbFloat 5.2s ease-in-out 0.9s infinite;"
+              />
+            </span>
+
+            <div
+              class="relative overflow-hidden rounded-[10px] px-6 py-9 shadow-[4px_4px_10px_rgba(0,0,0,0.25)]"
+              style="background-color: #00224c; color: #ece4d8;"
+            >
+              <div
+                aria-hidden="true"
+                class="pointer-events-none absolute inset-0 z-0"
+                style="background-image: url('./assets/images/theme/paper.webp'); background-size: 666px 1000px; background-repeat: repeat; mix-blend-mode: multiply; opacity: 0.4;"
+              ></div>
+
+              <div class="relative z-10">
+                <h2
+                  class="mb-8 text-center text-[20px] font-bold uppercase md:text-[24px]"
+                  style="font-family: 'Times New Roman', serif; color: #ece4d8; letter-spacing: 0.03em;"
+                >
+                  LỊCH TRÌNH NGÀY CƯỚI
+                </h2>
+
+                <ol class="relative mx-auto grid w-full max-w-[460px] grid-cols-[minmax(0,1fr)_16px_minmax(0,1fr)] items-center gap-x-6 md:gap-x-8 gap-y-8 md:gap-y-10">
+                  <!-- Vertical Timeline Line -->
+                  <span
+                    aria-hidden="true"
+                    class="pointer-events-none col-start-2 row-start-1 row-end-6 justify-self-center h-full w-px"
+                    style="background-color: rgba(236, 228, 216, 0.4);"
+                  ></span>
+
+                  <!-- 17:30 -->
+                  <li class="contents">
+                    <div class="col-start-1 row-start-1 relative text-right text-[16px] md:text-[17px] tabular-nums" style="color: #ece4d8;">
+                      17:30
+                    </div>
+                    <span class="col-start-2 row-start-1 relative z-10 justify-self-center h-2.5 w-2.5 rounded-full bg-[#ece4d8]"></span>
+                    <div class="col-start-3 row-start-1 text-left text-[13px] md:text-[15px]" style="color: rgba(236, 228, 216, 0.7);">
+                      Đón khách
+                    </div>
+                  </li>
+
+                  <!-- 18:30 -->
+                  <li class="contents">
+                    <div class="col-start-1 row-start-2 relative flex items-center justify-end text-right text-[16px] md:text-[17px] tabular-nums" style="color: #ece4d8;">
+                      <img
+                        src="./assets/images/theme/church.webp"
+                        alt=""
+                        aria-hidden="true"
+                        class="w-[38px] md:w-[46px] h-auto mr-3 sm:mr-5 object-contain"
+                      />
+                      <span>18:30</span>
+                    </div>
+                    <span class="col-start-2 row-start-2 relative z-10 justify-self-center h-2.5 w-2.5 rounded-full bg-[#ece4d8]"></span>
+                    <div class="col-start-3 row-start-2 text-left text-[13px] md:text-[15px]" style="color: rgba(236, 228, 216, 0.7);">
+                      Khai tiệc
+                    </div>
+                  </li>
+
+                  <!-- 18:45 -->
+                  <li class="contents">
+                    <div class="col-start-1 row-start-3 relative flex items-center justify-end text-right text-[16px] md:text-[17px] tabular-nums" style="color: #ece4d8;">
+                      <img
+                        src="./assets/images/theme/cake.webp"
+                        alt=""
+                        aria-hidden="true"
+                        class="w-[28px] md:w-[33px] h-auto mr-4 sm:mr-6 object-contain"
+                      />
+                      <span>18:45</span>
+                    </div>
+                    <span class="col-start-2 row-start-3 relative z-10 justify-self-center h-2.5 w-2.5 rounded-full bg-[#ece4d8]"></span>
+                    <div class="col-start-3 row-start-3 text-left text-[13px] md:text-[15px]" style="color: rgba(236, 228, 216, 0.7);">
+                      Rót rượu, cắt bánh
+                    </div>
+                  </li>
+
+                  <!-- 19:00 -->
+                  <li class="contents">
+                    <div class="col-start-1 row-start-4 relative flex items-center justify-end text-right text-[16px] md:text-[17px] tabular-nums" style="color: #ece4d8;">
+                      <img
+                        src="./assets/images/theme/cook.webp"
+                        alt=""
+                        aria-hidden="true"
+                        class="w-[36px] md:w-[44px] h-auto mr-3 sm:mr-5 object-contain"
+                      />
+                      <span>19:00</span>
+                    </div>
+                    <span class="col-start-2 row-start-4 relative z-10 justify-self-center h-2.5 w-2.5 rounded-full bg-[#ece4d8]"></span>
+                    <div class="col-start-3 row-start-4 text-left text-[13px] md:text-[15px]" style="color: rgba(236, 228, 216, 0.7);">
+                      Phục vụ món chính
+                    </div>
+                  </li>
+
+                  <!-- 21:00 -->
+                  <li class="contents">
+                    <div class="col-start-1 row-start-5 relative text-right text-[16px] md:text-[17px] tabular-nums" style="color: #ece4d8;">
+                      21:00
+                    </div>
+                    <span class="col-start-2 row-start-5 relative z-10 justify-self-center h-2.5 w-2.5 rounded-full bg-[#ece4d8]"></span>
+                    <div class="col-start-3 row-start-5 text-left text-[13px] md:text-[15px]" style="color: rgba(236, 228, 216, 0.7);">
+                      Kết thúc tiệc
+                    </div>
+                  </li>
+                </ol>
+              </div>
+            </div>
+          </section>
+
+          <!-- ================================================================
+               8. GUESTBOOK / SỔ LƯU BÚT
+               ================================================================ -->
+          <section class="relative z-10 mx-auto my-4 w-[88%] max-w-[420px] md:max-w-[560px]">
+            <!-- Bottom-left flipped flower -->
+            <span
+              data-parallax-flower="1"
+              aria-hidden="true"
+              class="parallax-flower pointer-events-none absolute left-[-14%] md:left-[-16%] bottom-[-4%] z-0 w-[32.1%] block"
+            >
+              <img
+                src="./assets/images/theme/flower4-decoration.webp"
+                alt=""
+                class="w-full max-w-none rotate-180 -scale-y-100 drop-shadow-[3px_4px_3px_rgba(0,0,0,0.3)]"
+                style="animation: dbFloat 5.8s ease-in-out 0.5s infinite;"
+              />
+            </span>
+
+            <div class="relative z-10 overflow-hidden rounded-[10px] bg-white px-4 py-8 shadow-[4px_4px_10px_rgba(0,0,0,0.25)]">
+              <section
+                data-landing-screenshot-id="invite-guestbook"
+                class="flex flex-col items-center text-center"
+              >
+                <h2
+                  class="mb-6 text-[20px] font-bold uppercase md:text-[24px]"
+                  style="font-family: 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.03em;"
+                >
+                  SỔ LƯU BÚT
+                </h2>
+
+                <form id="guestbook-form" class="w-full max-w-[248px] md:max-w-[380px] space-y-3">
+                  <input
+                    id="wish-name-input"
+                    type="text"
+                    required
+                    placeholder="Nhập tên*"
+                    class="w-full rounded-lg border px-4 py-3 text-sm outline-none transition-shadow focus:ring-2 focus:ring-[#00224c33]"
+                    style="border-color: #00224c; color: #00224c;"
+                  />
+
+                  <div class="relative">
+                    <textarea
+                      id="wish-message-input"
+                      required
+                      placeholder="Nhập lời chúc*"
+                      class="w-full h-[70px] md:h-[110px] rounded-lg border px-4 py-3 pr-12 text-sm outline-none resize-none transition-shadow focus:ring-2 focus:ring-[#00224c33]"
+                      style="border-color: #00224c; color: #00224c;"
+                    ></textarea>
+                    <button
+                      id="open-ai-wish-btn"
+                      type="button"
+                      title="Tạo lời chúc bằng AI"
+                      aria-label="Tạo lời chúc bằng AI"
+                      class="absolute right-2 top-2 p-2 rounded-lg text-base cursor-pointer transition-colors hover:bg-[#00224c22]"
+                      style="background-color: rgba(0, 34, 76, 0.1);"
+                    >
+                      🪄
+                    </button>
+                  </div>
+
+                  <button
+                    type="submit"
+                    class="w-full rounded-full px-6 py-2 text-sm font-semibold text-white transition-transform hover:scale-[1.02] active:scale-[0.98] cursor-pointer"
+                    style="background-color: #00224c;"
+                  >
+                    GỬI LỜI CHÚC
+                  </button>
+                </form>
+
+                <!-- Scrollable Wishes Feed -->
+                <div
+                  id="wishes-list"
+                  class="wishes-scroll mt-8 w-full max-h-[340px] space-y-3 overflow-y-auto pr-2 mx-auto md:max-w-[600px] text-left"
+                ></div>
+              </section>
+            </div>
+          </section>
+
+          <!-- ================================================================
+               9. WEDDING GIFT BOX / HỘP QUÀ MỪNG
+               ================================================================ -->
+          <div class="relative z-10 overflow-x-clip">
+            <!-- Castle backdrops -->
+            <img
+              src="./assets/images/theme/castle2-background.webp"
+              alt=""
+              aria-hidden="true"
+              class="pointer-events-none absolute left-[52%] top-[-14%] z-0 w-[62%] max-w-none opacity-30"
+            />
+            <img
+              src="./assets/images/theme/castle-background-1.webp"
+              alt=""
+              aria-hidden="true"
+              class="pointer-events-none absolute left-[22%] top-[-18%] z-0 w-[64%] max-w-none opacity-20"
+            />
+
+            <div class="relative z-10 flex flex-col items-center px-6 py-10 text-center">
+              <h2
+                class="mb-4 text-[20px] font-bold uppercase md:text-[24px]"
+                style="font-family: 'Times New Roman', serif; color: rgb(0, 34, 76); letter-spacing: 0.03em;"
+              >
+                HỘP QUÀ MỪNG
+              </h2>
+
+              <button
+                id="open-gift-btn"
+                type="button"
+                aria-label="Mở hộp mừng cưới"
+                class="group relative flex items-center justify-center cursor-pointer focus:outline-none"
+                style="width: 214px; height: 305px;"
+              >
+                <!-- Gold Sparkles -->
+                <span
+                  aria-hidden="true"
+                  class="ienv-sparkle-2 pointer-events-none absolute"
+                  style="top: 14%; right: 8%; font-size: 12.32px; color: rgb(181, 139, 47);"
+                >✦</span>
+                <span
+                  aria-hidden="true"
+                  class="ienv-sparkle-3 pointer-events-none absolute"
+                  style="top: 34%; left: 3%; font-size: 10.78px; color: rgb(181, 139, 47);"
+                >✦</span>
+                <span
+                  aria-hidden="true"
+                  class="ienv-sparkle-4 pointer-events-none absolute"
+                  style="top: 24%; right: 3%; font-size: 10.78px; color: rgb(181, 139, 47);"
+                >✦</span>
+
+                <!-- Twin envelopes -->
+                <div class="relative flex items-center justify-center" style="width: 154px; height: 223px;">
+                  <!-- Ground shadow -->
+                  <div
+                    class="ienv-shadow pointer-events-none absolute"
+                    style="left: 50%; bottom: -6px; width: 101.64px; height: 11px; margin-left: -50.82px; border-radius: 50%; background-color: rgba(0, 0, 0, 0.45); filter: blur(4px);"
+                  ></div>
+
+                  <!-- Back envelope -->
+                  <img
+                    src="./assets/images/theme/minimalism_darkblue.webp"
+                    alt=""
+                    aria-hidden="true"
+                    class="ienv-back pointer-events-none absolute inset-0 w-full h-full object-contain drop-shadow-md"
+                    style="transform: translateX(20%) translateY(-10%) scale(-0.8, 0.8) rotate(-15deg); z-index: 1;"
+                  />
+
+                  <!-- Front envelope -->
+                  <img
+                    src="./assets/images/theme/minimalism_darkblue.webp"
+                    alt="Hộp quà mừng cưới"
+                    class="ienv-card pointer-events-none relative w-full h-full object-contain drop-shadow-xl"
+                    style="rotate: -10deg; z-index: 2;"
+                  />
+                </div>
+
+                <!-- Pulse hint -->
+                <p
+                  class="ienv-hint absolute bottom-0 left-1/2 -translate-x-1/2 text-xs whitespace-nowrap font-medium"
+                  style="color: rgb(0, 34, 76);"
+                >
+                  Nhấn để mở
+                </p>
+              </button>
+            </div>
+          </div>
+
+          <!-- ================================================================
+               10. FOOTER
+               ================================================================ -->
+          <footer class="relative z-10 px-6 pb-6 pt-2 text-center">
+            <p class="text-[11px] md:text-[13px]" style="color: rgb(0, 34, 76);">
+              Sự hiện diện của quý khách là niềm vinh hạnh của gia đình chúng tôi!
+            </p>
+            <div class="mt-4 pb-2 flex justify-center">
+              <img
+                src="./assets/images/theme/goldenline3-decoration.webp"
+                alt=""
+                aria-hidden="true"
+                class="w-[45px] max-w-none object-contain"
+              />
+            </div>
+            <div class="pb-3">
+              <span class="text-xs opacity-50" style="color: rgb(0, 34, 76);">♡ Tuấn Kiệt &amp; Minh Anh</span>
+            </div>
+          </footer>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- ======================================================================
+       FLOATING MUSIC CD PLAYER
+       ====================================================================== -->
+  <div id="music-player-wrap" class="fixed bottom-6 right-4 z-40">
+    <button
+      id="music-btn"
+      type="button"
+      aria-label="Tạm dừng nhạc"
+      class="relative w-12 h-12 rounded-full shadow-lg cursor-pointer focus:outline-none transition-all hover:scale-110 active:scale-95 hover:shadow-xl"
+    >
+      <div
+        class="absolute inset-0 rounded-full animate-spin-cd"
+        style="background: linear-gradient(to right bottom, rgba(0, 34, 76, 0.8), rgb(0, 34, 76), rgba(0, 34, 76, 0.867));"
+      >
+        <div class="absolute inset-1 rounded-full border border-white/20"></div>
+        <div class="absolute inset-0 rounded-full bg-gradient-to-tr from-white/30 via-transparent to-transparent"></div>
+      </div>
+      <div class="absolute inset-0 flex items-center justify-center">
+        <div class="flex items-end gap-0.5 h-4">
+          <div class="eq-bar w-1 bg-white rounded-full animate-dance-1"></div>
+          <div class="eq-bar w-1 bg-white rounded-full animate-dance-2"></div>
+          <div class="eq-bar w-1 bg-white rounded-full animate-dance-3"></div>
+          <div class="eq-bar w-1 bg-white rounded-full animate-dance-4"></div>
+        </div>
+      </div>
+    </button>
+    <audio id="bg-music" src="./assets/audio/mot-doi.mp3" loop preload="none"></audio>
+  </div>
+
+  <!-- ======================================================================
+       MODAL 1: PHOTO LIGHTBOX (<dialog>)
+       ====================================================================== -->
+  <dialog id="lightbox-modal" class="native-modal">
+    <div class="flex flex-col items-center h-[100dvh] w-screen px-2 sm:px-4 pt-10 sm:pt-12 pb-4 sm:pb-6">
+      <!-- Top bar -->
+      <div class="w-full flex items-center justify-between px-2 mb-2">
+        <span id="lightbox-counter" class="text-white text-sm sm:text-lg bg-black/40 px-2.5 sm:px-3 py-1 rounded-full tabular-nums">
+          1 / 9
+        </span>
+        <button
+          id="lightbox-close-btn"
+          type="button"
+          aria-label="Đóng"
+          class="w-9 h-9 rounded-full flex items-center justify-center text-white text-xl sm:text-2xl hover:bg-white/20 transition-colors cursor-pointer"
+        >
+          ✕
+        </button>
+      </div>
+
+      <!-- Main photo + Prev/Next -->
+      <div class="relative flex-1 min-h-0 w-full flex items-center justify-center">
+        <button
+          id="lightbox-prev-btn"
+          type="button"
+          aria-label="Ảnh trước"
+          class="z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white text-3xl sm:text-4xl hover:bg-white/20 transition-colors cursor-pointer shrink-0"
+        >
+          ‹
+        </button>
+
+        <div class="flex-1 min-w-0 h-full flex items-center justify-center px-2">
+          <img
+            id="lightbox-img"
+            src=""
+            alt="Ảnh cưới"
+            class="max-h-full max-w-full rounded-xl sm:rounded-2xl object-contain shadow-2xl"
+          />
+        </div>
+
+        <button
+          id="lightbox-next-btn"
+          type="button"
+          aria-label="Ảnh tiếp"
+          class="z-10 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center text-white text-3xl sm:text-4xl hover:bg-white/20 transition-colors cursor-pointer shrink-0"
+        >
+          ›
+        </button>
+      </div>
+
+      <!-- Thumbnail strip -->
+      <div
+        id="lightbox-thumbs"
+        class="flex-shrink-0 flex gap-2 sm:gap-3 overflow-x-auto px-2 sm:px-4 py-2 sm:py-3 mt-3 sm:mt-4 bg-black/30 rounded-lg backdrop-blur-sm max-w-[90vw] sm:max-w-[80vw]"
+      ></div>
+    </div>
+  </dialog>
+
+  <!-- ======================================================================
+       MODAL 2: RSVP MODAL (<dialog>)
+       ====================================================================== -->
+  <dialog
+    id="rsvp-modal"
+    class="native-modal"
+    aria-labelledby="rsvp-modal-title"
+  >
+    <div class="bg-white rounded-2xl shadow-2xl w-[92vw] max-w-md max-h-[85vh] overflow-y-auto relative animate-fade-in">
+      <button
+        id="rsvp-close-btn"
+        type="button"
+        aria-label="Đóng"
+        class="absolute top-4 right-4 w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 text-gray-500 flex items-center justify-center cursor-pointer transition-colors"
+      >
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        </svg>
+      </button>
+
+      <div class="p-6">
+        <h3 id="rsvp-modal-title" class="text-xl font-semibold text-gray-900">Xác nhận tham dự</h3>
+        <p class="text-sm text-gray-500 mt-1 mb-6">
+          Sự hiện diện của bạn là niềm vinh hạnh cho gia đình chúng tôi. Xin xác nhận để chúng tôi chuẩn bị chu đáo nhất.
+        </p>
+
+        <form id="rsvp-form" class="space-y-4">
+          <div>
+            <label for="rsvp-name" class="block text-sm font-medium text-gray-700 mb-1.5">Tên của bạn</label>
+            <input
+              id="rsvp-name"
+              type="text"
+              required
+              placeholder="Nhập tên của bạn"
+              class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm text-gray-900 outline-none focus:border-[#00224c] focus:ring-2 focus:ring-[#00224c22]"
+            />
+          </div>
+
+          <div>
+            <span class="block text-sm font-medium text-gray-700 mb-1.5">Bạn sẽ đến chứ?</span>
+            <div class="grid grid-cols-1 gap-2.5">
+              <button
+                type="button"
+                data-rsvp-choice="attending"
+                class="rsvp-choice-btn flex items-center gap-3 py-2.5 px-3 rounded-xl border-2 border-emerald-500 bg-emerald-50/50 text-left transition-all cursor-pointer"
+              >
+                <span class="rsvp-choice-circle w-5 h-5 rounded-full flex items-center justify-center bg-emerald-500 shrink-0">
+                  <svg class="w-3.5 h-3.5 text-white" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </span>
+                <span class="rsvp-choice-label text-sm font-medium text-emerald-700">Tôi sẽ đến</span>
+              </button>
+
+              <button
+                type="button"
+                data-rsvp-choice="declining"
+                class="rsvp-choice-btn flex items-center gap-3 py-2.5 px-3 rounded-xl border-2 border-gray-200 bg-white text-left transition-all cursor-pointer hover:border-gray-300"
+              >
+                <span class="rsvp-choice-circle w-5 h-5 rounded-full border-2 border-gray-300 flex items-center justify-center shrink-0">
+                  <svg class="w-3.5 h-3.5 text-white hidden" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"></path>
+                  </svg>
+                </span>
+                <span class="rsvp-choice-label text-sm font-medium text-gray-700">Rất tiếc, tôi không thể đến</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Conditional Guest Count Stepper -->
+          <div id="rsvp-guest-count-wrap" class="flex items-center justify-between pt-1">
+            <span class="text-sm font-medium text-gray-700">Số lượng khách (bao gồm bạn)</span>
+            <div class="flex items-center gap-3">
+              <button
+                id="rsvp-minus-btn"
+                type="button"
+                aria-label="Giảm số khách"
+                class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M20 12H4"></path>
+                </svg>
+              </button>
+              <span id="rsvp-guest-count" class="w-6 text-center text-sm font-semibold text-gray-900 tabular-nums">1</span>
+              <button
+                id="rsvp-plus-btn"
+                type="button"
+                aria-label="Tăng số khách"
+                class="w-8 h-8 rounded-full border border-gray-200 flex items-center justify-center text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+              >
+                <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label for="rsvp-note" class="block text-sm font-medium text-gray-700 mb-1.5">Lời nhắn cho cô dâu chú rể</label>
+            <textarea
+              id="rsvp-note"
+              rows="3"
+              maxlength="1000"
+              placeholder="Để lại lời nhắn (không bắt buộc)"
+              class="w-full px-4 py-3 border border-gray-200 rounded-xl text-sm text-gray-900 outline-none resize-none focus:border-[#00224c] focus:ring-2 focus:ring-[#00224c22]"
+            ></textarea>
+          </div>
+
+          <button
+            id="rsvp-submit-btn"
+            type="submit"
+            disabled
+            class="w-full py-3.5 text-sm font-semibold rounded-xl transition-opacity disabled:opacity-45 disabled:cursor-not-allowed cursor-pointer"
+            style="background-color: rgb(0, 34, 76); color: rgb(222, 217, 215);"
+          >
+            Gửi xác nhận
+          </button>
+        </form>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ======================================================================
+       MODAL 3: AI WISH GENERATOR MODAL (<dialog>)
+       ====================================================================== -->
+  <dialog
+    id="ai-wish-modal"
+    class="native-modal"
+    aria-labelledby="ai-wish-title"
+  >
+    <div class="bg-white rounded-lg shadow-xl w-[92vw] max-w-md max-h-[80vh] overflow-y-auto animate-fade-in">
+      <div class="p-6">
+        <div class="flex items-start justify-between gap-3 mb-1">
+          <h3 id="ai-wish-title" class="text-lg font-semibold text-gray-900">✨ Lời chúc gợi ý cho bạn</h3>
+          <button
+            id="ai-wish-close-x"
+            type="button"
+            aria-label="Đóng"
+            class="text-gray-400 hover:text-gray-600 cursor-pointer"
+          >
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+            </svg>
+          </button>
+        </div>
+        <p class="text-xs text-gray-500 mb-4">Chọn một lời chúc bạn thích hoặc tạo lại để xem thêm gợi ý</p>
+
+        <div id="ai-wish-list" class="space-y-3 mb-4"></div>
+
+        <div class="flex gap-2">
+          <button
+            id="ai-wish-regen-btn"
+            type="button"
+            class="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-sm font-medium cursor-pointer transition-colors"
+          >
+            ✨ Tạo thêm
+          </button>
+          <button
+            id="ai-wish-close-btn"
+            type="button"
+            class="flex-1 px-4 py-2 bg-gray-200 text-gray-700 rounded-lg hover:bg-gray-300 text-sm font-medium cursor-pointer transition-colors"
+          >
+            Đóng
+          </button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- ======================================================================
+       MODAL 4: WEDDING GIFT BOX QR MODAL (<dialog>)
+       ====================================================================== -->
+  <dialog id="gift-modal" class="native-modal">
+    <div
+      class="w-[92vw] max-w-lg sm:max-w-xl rounded-2xl overflow-hidden shadow-2xl p-0 max-h-[90vh] overflow-y-auto animate-fade-in"
+      style="background-color: rgb(247, 245, 238);"
+    >
+      <div class="relative px-6 pt-6 pb-4 text-center" style="background-color: rgb(0, 34, 76);">
+        <h3
+          class="text-[20px] font-bold uppercase text-white"
+          style="font-family: 'Times New Roman', serif; text-shadow: rgba(0, 0, 0, 0.2) 1px 1px 2px;"
+        >
+          HỘP QUÀ MỪNG
+        </h3>
+        <button
+          id="gift-close-btn"
+          type="button"
+          aria-label="Đóng"
+          class="absolute right-3 top-3 w-8 h-8 rounded-full flex items-center justify-center text-white/80 hover:bg-white/15 cursor-pointer transition-colors"
+        >
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+          </svg>
+        </button>
+      </div>
+
+      <div
+        class="p-4 sm:p-6 flex flex-col items-center gap-6 sm:flex-row sm:flex-wrap sm:items-start sm:justify-center"
+        style="color: rgb(0, 34, 76);"
+      >
+        <!-- Groom QR -->
+        <div class="flex flex-col items-center text-center flex-1 max-w-[180px] sm:max-w-none">
+          <h4 class="text-xs min-h-[2rem] font-medium flex items-center justify-center">
+            Chú Rể - LY QUOC BAO
+          </h4>
+          <div
+            class="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-xl p-2 shadow-lg flex items-center justify-center mt-1"
+            style="border: 2px solid rgba(0, 34, 76, 0.125);"
+          >
+            <img src="./assets/images/qr/qr-groom.png" alt="QR Chú Rể - LY QUOC BAO" class="w-full h-full object-contain" />
+          </div>
+          <div class="mt-2.5 text-[10px] space-y-0.5">
+            <p>Vietcombank</p>
+            <p class="font-mono">1017788990</p>
+            <p class="font-semibold">LY QUOC BAO</p>
+          </div>
+          <a
+            href="./assets/images/qr/qr-groom.png"
+            download="QR-Chu-Re-LY-QUOC-BAO.png"
+            class="mt-2.5 inline-flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full cursor-pointer transition-opacity hover:opacity-80"
+            style="background-color: rgba(0, 34, 76, 0.082); color: rgb(0, 34, 76);"
+          >
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            <span>Lưu QR</span>
+          </a>
+        </div>
+
+        <!-- Bride QR -->
+        <div class="flex flex-col items-center text-center flex-1 max-w-[180px] sm:max-w-none">
+          <h4 class="text-xs min-h-[2rem] font-medium flex items-center justify-center">
+            Cô Dâu - DINH DIEU LINH
+          </h4>
+          <div
+            class="w-32 h-32 sm:w-40 sm:h-40 bg-white rounded-xl p-2 shadow-lg flex items-center justify-center mt-1"
+            style="border: 2px solid rgba(0, 34, 76, 0.125);"
+          >
+            <img src="./assets/images/qr/qr-bride.png" alt="QR Cô Dâu - DINH DIEU LINH" class="w-full h-full object-contain" />
+          </div>
+          <div class="mt-2.5 text-[10px] space-y-0.5">
+            <p>Techcombank</p>
+            <p class="font-mono">1904455660</p>
+            <p class="font-semibold">DINH DIEU LINH</p>
+          </div>
+          <a
+            href="./assets/images/qr/qr-bride.png"
+            download="QR-Co-Dau-DINH-DIEU-LINH.png"
+            class="mt-2.5 inline-flex items-center gap-1 text-[10px] px-2.5 py-1 rounded-full cursor-pointer transition-opacity hover:opacity-80"
+            style="background-color: rgba(0, 34, 76, 0.082); color: rgb(0, 34, 76);"
+          >
+            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path>
+            </svg>
+            <span>Lưu QR</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- Toast Container -->
+  <div id="toast-container" class="fixed top-4 left-1/2 -translate-x-1/2 z-[10000] flex flex-col gap-2 pointer-events-none"></div>
+
+  <script src="./script.js"></script>
+</body>
+</html>
