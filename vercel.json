@@ -1,0 +1,11 @@
+{
+  "rewrites": [
+    { "source": "/", "destination": "/api/render" },
+    { "source": "/index.html", "destination": "/api/render" }
+  ],
+  "functions": {
+    "api/render.js": {
+      "includeFiles": "index.html"
+    }
+  }
+}
