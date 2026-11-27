@@ -907,12 +907,25 @@
     setVal("ed-hero2", c.photos.hero2);
     document.getElementById("preview-hero-2").src = c.photos.hero2;
 
-    const music = c.music || { enabled: true, src: "./assets/audio/mot-doi.mp3", title: "Một Đời" };
+    const music = c.music || {
+      enabled: true,
+      sourceType: "file",
+      src: "./assets/audio/mot-doi.mp3",
+      embedUrl: "",
+      title: "Một Đời",
+    };
     const musicEnabledEl = document.getElementById("ed-musicEnabled");
     if (musicEnabledEl) musicEnabledEl.checked = music.enabled !== false;
     setVal("ed-musicTitle", music.title || "");
     setVal("ed-musicSrc", music.src || "./assets/audio/mot-doi.mp3");
+    setVal("ed-musicEmbedUrl", music.embedUrl || "");
+    const initialMode =
+      music.sourceType === "embed" || (music.sourceType !== "file" && Boolean((music.embedUrl || "").trim()))
+        ? "embed"
+        : "file";
+    setAdminMusicMode(initialMode, true);
     updateAdminMusicPreview();
+    updateAdminMusicEmbedPreview();
 
     if (syncWebhookInput) syncWebhookInput.value = c.webhookUrl || "";
 
@@ -1058,8 +1071,10 @@
     c.photos.hero2 = getVal("ed-hero2").trim();
     c.music = {
       enabled: Boolean(document.getElementById("ed-musicEnabled")?.checked),
+      sourceType: currentAdminMusicMode,
       title: getVal("ed-musicTitle").trim(),
       src: getVal("ed-musicSrc").trim() || "./assets/audio/mot-doi.mp3",
+      embedUrl: getVal("ed-musicEmbedUrl").trim(),
     };
     c.webhookUrl = syncWebhookInput ? syncWebhookInput.value.trim() : "";
 
@@ -1068,6 +1083,22 @@
 
   async function saveStoreToLocal() {
     const saveBtn = document.getElementById("btn-save-top");
+    const musicEnabled = Boolean(document.getElementById("ed-musicEnabled")?.checked);
+    if (musicEnabled && currentAdminMusicMode === "embed") {
+      const rawEmbed = getVal("ed-musicEmbedUrl").trim();
+      const parsedEmbed =
+        typeof window.parseWeddingMusicEmbed === "function"
+          ? window.parseWeddingMusicEmbed(rawEmbed)
+          : null;
+      if (!rawEmbed || !parsedEmbed) {
+        showToast(
+          "Link hoặc mã nhúng nhạc chưa hợp lệ! Hãy dán link YouTube, SoundCloud, Spotify, thẻ <iframe> hoặc chuyển sang tab File / Link .mp3.",
+          "error"
+        );
+        document.getElementById("ed-musicEmbedUrl")?.focus();
+        return false;
+      }
+    }
     try {
       const updated = collectFormIntoEditingTemplate();
       suppressAutoCloudPush = true;
@@ -1136,15 +1167,127 @@
     mapUseCoordsInput.addEventListener("change", updateAdminMapPreview);
   }
 
+  let currentAdminMusicMode = "file";
   let musicPreviewTimer = null;
+  let musicEmbedPreviewTimer = null;
+
+  const btnMusicModeFile = document.getElementById("btn-music-mode-file");
+  const btnMusicModeEmbed = document.getElementById("btn-music-mode-embed");
+  const musicModeFilePanel = document.getElementById("music-mode-file-panel");
+  const musicModeEmbedPanel = document.getElementById("music-mode-embed-panel");
+
+  function setAdminMusicMode(mode, skipPause = false) {
+    currentAdminMusicMode = mode === "embed" ? "embed" : "file";
+    const isEmbed = currentAdminMusicMode === "embed";
+
+    if (musicModeFilePanel) musicModeFilePanel.classList.toggle("hidden", isEmbed);
+    if (musicModeEmbedPanel) musicModeEmbedPanel.classList.toggle("hidden", !isEmbed);
+
+    if (btnMusicModeFile) {
+      btnMusicModeFile.className = !isEmbed
+        ? "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer bg-[#00224c] text-[#ece4d8]"
+        : "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer text-[#00224c]/75 hover:bg-white/60";
+    }
+    if (btnMusicModeEmbed) {
+      btnMusicModeEmbed.className = isEmbed
+        ? "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer bg-[#00224c] text-[#ece4d8]"
+        : "rounded-md px-3 py-1.5 text-xs font-semibold transition-colors cursor-pointer text-[#00224c]/75 hover:bg-white/60";
+    }
+
+    if (!skipPause) {
+      const audioEl = document.getElementById("preview-music-audio");
+      if (isEmbed && audioEl) audioEl.pause();
+      const iframeEl = document.getElementById("preview-music-iframe");
+      if (!isEmbed && iframeEl && iframeEl.getAttribute("src")) {
+        iframeEl.removeAttribute("src");
+      } else if (isEmbed) {
+        updateAdminMusicEmbedPreview();
+      }
+    }
+  }
+
+  if (btnMusicModeFile) {
+    btnMusicModeFile.addEventListener("click", () => setAdminMusicMode("file"));
+  }
+  if (btnMusicModeEmbed) {
+    btnMusicModeEmbed.addEventListener("click", () => setAdminMusicMode("embed"));
+  }
+
   function updateAdminMusicPreview() {
     const audioEl = document.getElementById("preview-music-audio");
     if (!audioEl) return;
-    const src = getVal("ed-musicSrc").trim() || "./assets/audio/mot-doi.mp3";
-    if (audioEl.getAttribute("src") !== src) {
+    const rawSrc = getVal("ed-musicSrc").trim() || "./assets/audio/mot-doi.mp3";
+    if (typeof window.parseWeddingMusicEmbed === "function") {
+      const maybeEmbed = window.parseWeddingMusicEmbed(rawSrc);
+      if (maybeEmbed && maybeEmbed.provider !== "audio") {
+        setVal("ed-musicEmbedUrl", rawSrc);
+        setVal("ed-musicSrc", "./assets/audio/mot-doi.mp3");
+        setAdminMusicMode("embed");
+        updateAdminMusicEmbedPreview();
+        showToast(`Đã tự động chuyển sang chế độ Nhúng nhạc (${maybeEmbed.label})!`);
+        return;
+      }
+    }
+    if (audioEl.getAttribute("src") !== rawSrc) {
       audioEl.pause();
-      audioEl.src = src;
+      audioEl.src = rawSrc;
       audioEl.load();
+    }
+  }
+
+  function updateAdminMusicEmbedPreview() {
+    const iframeEl = document.getElementById("preview-music-iframe");
+    const emptyEl = document.getElementById("preview-music-embed-empty");
+    const badgeEl = document.getElementById("music-embed-detected");
+    if (!iframeEl || !emptyEl) return;
+
+    const rawEmbed = getVal("ed-musicEmbedUrl").trim();
+    if (!rawEmbed) {
+      if (iframeEl.getAttribute("src")) iframeEl.removeAttribute("src");
+      iframeEl.classList.add("hidden");
+      emptyEl.classList.remove("hidden");
+      if (badgeEl) {
+        badgeEl.textContent = "Chưa nhập link nhúng";
+        badgeEl.className = "text-[11px] font-medium text-gray-500";
+      }
+      return;
+    }
+
+    const parsed =
+      typeof window.parseWeddingMusicEmbed === "function"
+        ? window.parseWeddingMusicEmbed(rawEmbed)
+        : null;
+
+    if (!parsed) {
+      if (iframeEl.getAttribute("src")) iframeEl.removeAttribute("src");
+      iframeEl.classList.add("hidden");
+      emptyEl.classList.remove("hidden");
+      if (badgeEl) {
+        badgeEl.textContent = "⚠️ Link/mã nhúng chưa đúng định dạng";
+        badgeEl.className = "text-[11px] font-semibold text-amber-700";
+      }
+      return;
+    }
+
+    if (parsed.provider === "audio") {
+      setVal("ed-musicSrc", parsed.audioSrc);
+      setVal("ed-musicEmbedUrl", "");
+      setAdminMusicMode("file");
+      updateAdminMusicPreview();
+      showToast("Đã nhận diện link file âm thanh trực tiếp và chuyển sang tab File / Link .mp3!");
+      return;
+    }
+
+    if (badgeEl) {
+      badgeEl.textContent = `✓ Đã nhận diện: ${parsed.label}`;
+      badgeEl.className = "text-[11px] font-semibold text-emerald-700";
+    }
+
+    emptyEl.classList.add("hidden");
+    iframeEl.classList.remove("hidden");
+    iframeEl.style.height = parsed.provider === "spotify" ? "152px" : "180px";
+    if (iframeEl.getAttribute("src") !== parsed.previewUrl) {
+      iframeEl.src = parsed.previewUrl;
     }
   }
 
@@ -1156,6 +1299,22 @@
     });
   }
 
+  const musicEmbedInput = document.getElementById("ed-musicEmbedUrl");
+  if (musicEmbedInput) {
+    musicEmbedInput.addEventListener("input", () => {
+      clearTimeout(musicEmbedPreviewTimer);
+      musicEmbedPreviewTimer = setTimeout(updateAdminMusicEmbedPreview, 350);
+    });
+  }
+
+  const clearMusicEmbedBtn = document.getElementById("btn-clear-music-embed");
+  if (clearMusicEmbedBtn) {
+    clearMusicEmbedBtn.addEventListener("click", () => {
+      setVal("ed-musicEmbedUrl", "");
+      updateAdminMusicEmbedPreview();
+    });
+  }
+
   const musicFileInput = document.getElementById("ed-musicFile");
   if (musicFileInput) {
     musicFileInput.addEventListener("change", (e) => {
@@ -1164,7 +1323,7 @@
       const MAX_BYTES = 2.5 * 1024 * 1024;
       if (file.size > MAX_BYTES) {
         showToast(
-          "File nhạc lớn hơn 2.5 MB! Hãy chép vào thư mục assets/audio/ hoặc dán link .mp3 trực tiếp.",
+          "File nhạc lớn hơn 2.5 MB! Hãy dùng tab Nhúng link / Iframe (YouTube, SoundCloud...) hoặc chép vào thư mục assets/audio/.",
           "error"
         );
         e.target.value = "";
@@ -1177,6 +1336,7 @@
         if (!getVal("ed-musicTitle").trim()) {
           setVal("ed-musicTitle", file.name.replace(/\.[^.]+$/, ""));
         }
+        setAdminMusicMode("file");
         updateAdminMusicPreview();
         showToast("Đã tải file nhạc lên. Bấm Lưu thay đổi để áp dụng!");
       };
@@ -1195,7 +1355,10 @@
       if (enabledEl) enabledEl.checked = true;
       setVal("ed-musicTitle", "Một Đời");
       setVal("ed-musicSrc", "./assets/audio/mot-doi.mp3");
+      setVal("ed-musicEmbedUrl", "");
+      setAdminMusicMode("file");
       updateAdminMusicPreview();
+      updateAdminMusicEmbedPreview();
       showToast("Đã khôi phục nhạc nền mặc định.");
     });
   }

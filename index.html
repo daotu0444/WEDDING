@@ -1140,7 +1140,28 @@ TƯ GIA</p>
   <!-- ======================================================================
        FLOATING MUSIC CD PLAYER
        ====================================================================== -->
+  <div
+    id="bg-music-embed-host"
+    aria-hidden="true"
+    class="pointer-events-none fixed bottom-4 right-4 z-0 h-[200px] w-[200px] overflow-hidden opacity-[0.004]"
+  ></div>
   <div id="music-player-wrap" class="fixed bottom-6 right-4 z-40">
+    <div
+      id="music-widget-popover"
+      class="pointer-events-none invisible absolute bottom-14 right-0 w-[290px] sm:w-[320px] translate-y-2 rounded-2xl border border-[#00224c22] bg-white/95 p-2.5 opacity-0 shadow-2xl backdrop-blur-md transition-all duration-200"
+    >
+      <div class="mb-1.5 flex items-center justify-between px-1">
+        <span id="music-widget-title" class="truncate text-xs font-semibold text-[#00224c]">Nhạc nền thiệp cưới</span>
+        <button
+          id="music-widget-close"
+          type="button"
+          class="rounded-md px-2 py-0.5 text-[11px] font-medium text-gray-500 hover:bg-gray-100 hover:text-gray-800 cursor-pointer"
+        >
+          Thu gọn ✕
+        </button>
+      </div>
+      <div id="music-widget-frame-wrap" class="overflow-hidden rounded-xl bg-gray-50"></div>
+    </div>
     <button
       id="music-btn"
       type="button"

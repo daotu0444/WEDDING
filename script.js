@@ -389,37 +389,320 @@
   const bgMusic = document.getElementById("bg-music");
   const musicBtn = document.getElementById("music-btn");
   const musicWrap = document.getElementById("music-player-wrap");
+  const bgMusicEmbedHost = document.getElementById("bg-music-embed-host");
+  const musicWidgetPopover = document.getElementById("music-widget-popover");
+  const musicWidgetTitle = document.getElementById("music-widget-title");
+  const musicWidgetClose = document.getElementById("music-widget-close");
+  const musicWidgetFrameWrap = document.getElementById("music-widget-frame-wrap");
 
+  let resolvedMusic = { enabled: true, mode: "audio", src: "./assets/audio/mot-doi.mp3", title: "Một Đời" };
   let hasMusic = true;
   let isMusicPlaying = false;
+  let pendingEmbedPlay = false;
+  let widgetPopoverOpen = false;
 
-  function applyMusicConfig(tpl) {
-    const musicCfg = (tpl && tpl.music) || {};
-    const isMusicEnabled = musicCfg.enabled !== false;
-    const resolvedMusicSrc = String(musicCfg.src || "./assets/audio/mot-doi.mp3").trim();
-    hasMusic = isMusicEnabled && Boolean(resolvedMusicSrc);
+  let ytApiLoaded = false;
+  let ytApiCallbacks = [];
+  let ytPlayer = null;
+  let ytPlayerReady = false;
+  let currentYtKey = "";
 
-    if (bgMusic && hasMusic && bgMusic.getAttribute("src") !== resolvedMusicSrc) {
-      const wasPlaying = isMusicPlaying;
-      bgMusic.pause();
-      bgMusic.src = resolvedMusicSrc;
-      bgMusic.load();
-      if (wasPlaying) tryPlayMusic();
+  let scIframe = null;
+  let scReady = false;
+  let currentScUrl = "";
+  let currentWidgetUrl = "";
+
+  function setWidgetPopoverOpen(open) {
+    widgetPopoverOpen = Boolean(open);
+    if (!musicWidgetPopover) return;
+    musicWidgetPopover.classList.toggle("pointer-events-none", !widgetPopoverOpen);
+    musicWidgetPopover.classList.toggle("invisible", !widgetPopoverOpen);
+    musicWidgetPopover.classList.toggle("opacity-0", !widgetPopoverOpen);
+    musicWidgetPopover.classList.toggle("translate-y-2", !widgetPopoverOpen);
+  }
+
+  if (musicWidgetClose) {
+    musicWidgetClose.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setWidgetPopoverOpen(false);
+    });
+  }
+
+  function loadYouTubeIframeApi(cb) {
+    if (window.YT && typeof window.YT.Player === "function") {
+      cb();
+      return;
     }
-    if (!hasMusic && bgMusic && isMusicPlaying) {
-      bgMusic.pause();
+    ytApiCallbacks.push(cb);
+    if (ytApiLoaded) return;
+    ytApiLoaded = true;
+    const prevReady = window.onYouTubeIframeAPIReady;
+    window.onYouTubeIframeAPIReady = () => {
+      if (typeof prevReady === "function") prevReady();
+      const queue = ytApiCallbacks.slice();
+      ytApiCallbacks = [];
+      queue.forEach((fn) => fn());
+    };
+    const tag = document.createElement("script");
+    tag.src = "https://www.youtube.com/iframe_api";
+    tag.async = true;
+    document.head.appendChild(tag);
+  }
+
+  function destroyYouTubeEmbed() {
+    if (ytPlayer) {
+      try {
+        if (typeof ytPlayer.stopVideo === "function") ytPlayer.stopVideo();
+        if (typeof ytPlayer.destroy === "function") ytPlayer.destroy();
+      } catch (_) {}
+      ytPlayer = null;
+    }
+    ytPlayerReady = false;
+    currentYtKey = "";
+  }
+
+  function destroySoundCloudEmbed() {
+    if (scIframe) {
+      scIframe.remove();
+      scIframe = null;
+    }
+    scReady = false;
+    currentScUrl = "";
+  }
+
+  function postSoundCloudCmd(method, value) {
+    if (!scIframe || !scIframe.contentWindow) return;
+    try {
+      const msg = value !== undefined ? { method, value } : { method };
+      scIframe.contentWindow.postMessage(JSON.stringify(msg), "*");
+    } catch (_) {}
+  }
+
+  window.addEventListener("message", (event) => {
+    if (!scIframe || !/soundcloud\.com$/i.test(event.origin || "")) return;
+    let data = event.data;
+    if (typeof data === "string") {
+      try {
+        data = JSON.parse(data);
+      } catch (_) {
+        return;
+      }
+    }
+    if (!data || typeof data !== "object") return;
+    if (data.method === "ready") {
+      scReady = true;
+      postSoundCloudCmd("addEventListener", "play");
+      postSoundCloudCmd("addEventListener", "pause");
+      postSoundCloudCmd("addEventListener", "finish");
+      if (pendingEmbedPlay) {
+        postSoundCloudCmd("play");
+      }
+    } else if (data.method === "play") {
+      isMusicPlaying = true;
+      pendingEmbedPlay = false;
+      syncMusicUI();
+    } else if (data.method === "pause") {
       isMusicPlaying = false;
       syncMusicUI();
+    } else if (data.method === "finish") {
+      postSoundCloudCmd("seekTo", 0);
+      postSoundCloudCmd("play");
     }
-    if (musicBtn && musicCfg.title) {
-      musicBtn.title = `Nhạc nền: ${musicCfg.title}`;
+  });
+
+  function setupYouTubeEmbed(videoId, startSeconds) {
+    if (!bgMusicEmbedHost) return;
+    const key = `${videoId}:${startSeconds || 0}`;
+    if (currentYtKey === key && ytPlayer) return;
+    destroyYouTubeEmbed();
+    destroySoundCloudEmbed();
+    currentYtKey = key;
+
+    loadYouTubeIframeApi(() => {
+      if (currentYtKey !== key || !bgMusicEmbedHost) return;
+      bgMusicEmbedHost.innerHTML = '<div id="yt-bg-player"></div>';
+      const playerVars = {
+        autoplay: pendingEmbedPlay ? 1 : 0,
+        controls: 0,
+        disablekb: 1,
+        fs: 0,
+        iv_load_policy: 3,
+        loop: 1,
+        modestbranding: 1,
+        playsinline: 1,
+        rel: 0,
+        start: startSeconds || 0,
+        playlist: videoId,
+      };
+      if (/^https?:\/\//i.test(window.location.origin)) {
+        playerVars.origin = window.location.origin;
+      }
+      ytPlayer = new window.YT.Player("yt-bg-player", {
+        width: "200",
+        height: "200",
+        videoId,
+        playerVars,
+        events: {
+          onReady: (e) => {
+            ytPlayerReady = true;
+            if (pendingEmbedPlay) {
+              try {
+                e.target.unMute();
+                e.target.setVolume(100);
+                e.target.playVideo();
+              } catch (_) {}
+            }
+          },
+          onStateChange: (e) => {
+            const state = e.data;
+            if (state === 1) {
+              isMusicPlaying = true;
+              pendingEmbedPlay = false;
+              syncMusicUI();
+            } else if (state === 2) {
+              isMusicPlaying = false;
+              syncMusicUI();
+            } else if (state === 0) {
+              try {
+                e.target.seekTo(startSeconds || 0, true);
+                e.target.playVideo();
+              } catch (_) {}
+            }
+          },
+          onError: () => {
+            isMusicPlaying = false;
+            pendingEmbedPlay = false;
+            syncMusicUI();
+          },
+        },
+      });
+    });
+  }
+
+  function setupSoundCloudEmbed(embedUrl) {
+    if (!bgMusicEmbedHost) return;
+    if (currentScUrl === embedUrl && scIframe) return;
+    destroyYouTubeEmbed();
+    destroySoundCloudEmbed();
+    currentScUrl = embedUrl;
+
+    const iframe = document.createElement("iframe");
+    iframe.src = embedUrl;
+    iframe.width = "200";
+    iframe.height = "200";
+    iframe.allow = "autoplay; encrypted-media";
+    iframe.className = "border-0";
+    bgMusicEmbedHost.innerHTML = "";
+    bgMusicEmbedHost.appendChild(iframe);
+    scIframe = iframe;
+  }
+
+  function setupInteractiveWidgetEmbed(embed) {
+    destroyYouTubeEmbed();
+    destroySoundCloudEmbed();
+    if (musicWidgetTitle) {
+      musicWidgetTitle.textContent = resolvedMusic.title || "Nhạc nền thiệp cưới";
+    }
+    if (musicWidgetFrameWrap && currentWidgetUrl !== embed.embedUrl) {
+      currentWidgetUrl = embed.embedUrl;
+      const h = embed.provider === "spotify" ? 152 : 160;
+      musicWidgetFrameWrap.innerHTML =
+        `<iframe src="${embed.embedUrl.replace(/"/g, "&quot;")}" height="${h}" ` +
+        `allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture" ` +
+        `loading="lazy" class="w-full border-0"></iframe>`;
+    }
+  }
+
+  function pauseActiveMusic() {
+    pendingEmbedPlay = false;
+    if (bgMusic) bgMusic.pause();
+    if (ytPlayer && ytPlayerReady && typeof ytPlayer.pauseVideo === "function") {
+      try {
+        ytPlayer.pauseVideo();
+      } catch (_) {}
+    }
+    if (scIframe && scReady) {
+      postSoundCloudCmd("pause");
+    }
+    isMusicPlaying = false;
+    syncMusicUI();
+  }
+
+  function applyMusicConfig(tpl) {
+    const wasActive = isMusicPlaying || pendingEmbedPlay;
+    resolvedMusic =
+      typeof window.resolveWeddingMusic === "function"
+        ? window.resolveWeddingMusic(tpl && tpl.music)
+        : {
+            enabled: !tpl || !tpl.music || tpl.music.enabled !== false,
+            mode: "audio",
+            src: String((tpl && tpl.music && tpl.music.src) || "./assets/audio/mot-doi.mp3").trim(),
+            title: String((tpl && tpl.music && tpl.music.title) || "Một Đời").trim(),
+          };
+
+    hasMusic = Boolean(resolvedMusic.enabled && resolvedMusic.mode !== "none");
+
+    if (!hasMusic) {
+      pauseActiveMusic();
+      destroyYouTubeEmbed();
+      destroySoundCloudEmbed();
+      setWidgetPopoverOpen(false);
+      if (musicWidgetFrameWrap) {
+        musicWidgetFrameWrap.innerHTML = "";
+        currentWidgetUrl = "";
+      }
+    } else if (resolvedMusic.mode === "audio") {
+      destroyYouTubeEmbed();
+      destroySoundCloudEmbed();
+      setWidgetPopoverOpen(false);
+      if (musicWidgetFrameWrap) {
+        musicWidgetFrameWrap.innerHTML = "";
+        currentWidgetUrl = "";
+      }
+      if (bgMusic && bgMusic.getAttribute("src") !== resolvedMusic.src) {
+        bgMusic.pause();
+        bgMusic.src = resolvedMusic.src;
+        bgMusic.load();
+      }
+      if (wasActive) tryPlayMusic();
+    } else if (resolvedMusic.mode === "embed" && resolvedMusic.embed) {
+      if (bgMusic) bgMusic.pause();
+      const emb = resolvedMusic.embed;
+      if (emb.provider === "youtube") {
+        setWidgetPopoverOpen(false);
+        if (musicWidgetFrameWrap) {
+          musicWidgetFrameWrap.innerHTML = "";
+          currentWidgetUrl = "";
+        }
+        if (wasActive) pendingEmbedPlay = true;
+        setupYouTubeEmbed(emb.videoId, emb.startSeconds);
+        if (wasActive && ytPlayer && ytPlayerReady) tryPlayMusic();
+      } else if (emb.provider === "soundcloud") {
+        setWidgetPopoverOpen(false);
+        if (musicWidgetFrameWrap) {
+          musicWidgetFrameWrap.innerHTML = "";
+          currentWidgetUrl = "";
+        }
+        if (wasActive) pendingEmbedPlay = true;
+        setupSoundCloudEmbed(emb.embedUrl);
+        if (wasActive && scIframe && scReady) tryPlayMusic();
+      } else {
+        setupInteractiveWidgetEmbed(emb);
+        if (wasActive) {
+          setWidgetPopoverOpen(true);
+          isMusicPlaying = true;
+          syncMusicUI();
+        }
+      }
+    }
+
+    if (musicBtn) {
+      musicBtn.title = resolvedMusic.title ? `Nhạc nền: ${resolvedMusic.title}` : "Nhạc nền thiệp cưới";
     }
     if (musicWrap) {
       musicWrap.classList.toggle("hidden", !hasMusic);
     }
   }
-
-  applyMusicConfig(activeTpl);
 
   function syncMusicUI() {
     if (!musicWrap || !musicBtn) return;
@@ -433,29 +716,67 @@
   }
 
   function tryPlayMusic() {
-    if (!bgMusic || !hasMusic) return;
-    const playPromise = bgMusic.play();
-    if (playPromise && typeof playPromise.then === "function") {
-      playPromise
-        .then(() => {
-          isMusicPlaying = true;
-          syncMusicUI();
-        })
-        .catch(() => {
-          isMusicPlaying = false;
-          syncMusicUI();
-        });
+    if (!hasMusic) return;
+
+    if (resolvedMusic.mode === "audio") {
+      if (!bgMusic) return;
+      const playPromise = bgMusic.play();
+      if (playPromise && typeof playPromise.then === "function") {
+        playPromise
+          .then(() => {
+            isMusicPlaying = true;
+            syncMusicUI();
+          })
+          .catch(() => {
+            isMusicPlaying = false;
+            syncMusicUI();
+          });
+      }
+      return;
+    }
+
+    if (resolvedMusic.mode === "embed" && resolvedMusic.embed) {
+      const emb = resolvedMusic.embed;
+      if (emb.provider === "youtube") {
+        pendingEmbedPlay = true;
+        setupYouTubeEmbed(emb.videoId, emb.startSeconds);
+        if (ytPlayer && ytPlayerReady && typeof ytPlayer.playVideo === "function") {
+          try {
+            ytPlayer.unMute();
+            ytPlayer.setVolume(100);
+            ytPlayer.playVideo();
+          } catch (_) {}
+        }
+      } else if (emb.provider === "soundcloud") {
+        pendingEmbedPlay = true;
+        setupSoundCloudEmbed(emb.embedUrl);
+        if (scIframe && scReady) {
+          postSoundCloudCmd("play");
+        }
+      } else {
+        setupInteractiveWidgetEmbed(emb);
+        setWidgetPopoverOpen(true);
+        isMusicPlaying = true;
+        syncMusicUI();
+      }
     }
   }
 
+  applyMusicConfig(activeTpl);
   syncMusicUI();
 
-  if (musicBtn && bgMusic) {
+  if (musicBtn) {
     musicBtn.addEventListener("click", () => {
-      if (isMusicPlaying) {
-        bgMusic.pause();
-        isMusicPlaying = false;
+      if (!hasMusic) return;
+      if (resolvedMusic.mode === "embed" && resolvedMusic.embed && resolvedMusic.embed.interactiveWidget) {
+        const nextOpen = !widgetPopoverOpen;
+        setWidgetPopoverOpen(nextOpen);
+        isMusicPlaying = nextOpen;
         syncMusicUI();
+        return;
+      }
+      if (isMusicPlaying || pendingEmbedPlay) {
+        pauseActiveMusic();
       } else {
         tryPlayMusic();
       }

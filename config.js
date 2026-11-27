@@ -172,7 +172,9 @@
     },
     music: {
       enabled: true,
+      sourceType: "file",
       src: "./assets/audio/mot-doi.mp3",
+      embedUrl: "",
       title: "Một Đời",
     },
     webhookUrl: "",
@@ -296,6 +298,189 @@
     return "https://www.google.com/maps/dir/?api=1&destination=10.7553,106.6904";
   }
 
+  function parseTimeParamSeconds(val) {
+    if (!val) return 0;
+    const str = String(val).trim();
+    if (/^\d+$/.test(str)) return Number(str);
+    const hms = str.match(/^(?:(\d+)h)?(?:(\d+)m)?(?:(\d+)s?)?$/i);
+    if (hms && (hms[1] || hms[2] || hms[3])) {
+      return (Number(hms[1]) || 0) * 3600 + (Number(hms[2]) || 0) * 60 + (Number(hms[3]) || 0);
+    }
+    return 0;
+  }
+
+  function parseWeddingMusicEmbed(rawInput) {
+    let raw = String(rawInput || "").trim();
+    if (!raw) return null;
+
+    const wasIframeTag = /<iframe\b/i.test(raw);
+    if (wasIframeTag) {
+      const match = raw.match(/src\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s>]+))/i);
+      if (!match) return null;
+      raw = (match[1] || match[2] || match[3] || "").trim().replace(/&amp;/gi, "&");
+    }
+
+    if (raw.startsWith("//")) {
+      raw = "https:" + raw;
+    }
+    if (!/^https?:\/\//i.test(raw)) return null;
+
+    let urlObj;
+    try {
+      urlObj = new URL(raw);
+    } catch (_) {
+      return null;
+    }
+
+    const host = urlObj.hostname.replace(/^www\./i, "").toLowerCase();
+
+    if (/\.(mp3|m4a|aac|ogg|wav|flac)$/i.test(urlObj.pathname)) {
+      return {
+        provider: "audio",
+        label: "Link file âm thanh",
+        audioSrc: raw,
+        embedUrl: raw,
+        previewUrl: raw,
+        interactiveWidget: false,
+      };
+    }
+
+    if (
+      host === "youtube.com" ||
+      host === "m.youtube.com" ||
+      host === "music.youtube.com" ||
+      host === "youtu.be" ||
+      host === "youtube-nocookie.com"
+    ) {
+      let videoId = "";
+      if (host === "youtu.be") {
+        videoId = urlObj.pathname.split("/").filter(Boolean)[0] || "";
+      } else if (urlObj.pathname.startsWith("/watch")) {
+        videoId = urlObj.searchParams.get("v") || "";
+      } else {
+        const pathMatch = urlObj.pathname.match(/^\/(?:embed|shorts|live|v)\/([A-Za-z0-9_-]{11})/);
+        if (pathMatch) videoId = pathMatch[1];
+      }
+      if (/^[A-Za-z0-9_-]{11}$/.test(videoId)) {
+        const startSeconds =
+          parseTimeParamSeconds(urlObj.searchParams.get("start")) ||
+          parseTimeParamSeconds(urlObj.searchParams.get("t"));
+        const startParam = startSeconds > 0 ? `&start=${startSeconds}` : "";
+        return {
+          provider: "youtube",
+          label: `YouTube (${videoId}${startSeconds > 0 ? `, từ ${startSeconds}s` : ""})`,
+          videoId,
+          startSeconds,
+          embedUrl: `https://www.youtube.com/embed/${videoId}?enablejsapi=1&playsinline=1&rel=0&loop=1&playlist=${videoId}${startParam}`,
+          previewUrl: `https://www.youtube.com/embed/${videoId}?playsinline=1&rel=0${startParam}`,
+          interactiveWidget: false,
+        };
+      }
+    }
+
+    if (
+      host === "soundcloud.com" ||
+      host === "m.soundcloud.com" ||
+      host === "on.soundcloud.com" ||
+      host === "w.soundcloud.com"
+    ) {
+      let previewUrl = raw;
+      if (host === "w.soundcloud.com" && urlObj.pathname.startsWith("/player")) {
+        urlObj.searchParams.set("auto_play", "false");
+        previewUrl = urlObj.toString();
+      } else {
+        previewUrl =
+          `https://w.soundcloud.com/player/?url=${encodeURIComponent(raw)}` +
+          `&color=%2300224c&auto_play=false&hide_related=true&show_comments=false&show_user=true&show_reposts=false&show_teaser=false`;
+      }
+      return {
+        provider: "soundcloud",
+        label: "SoundCloud",
+        embedUrl: previewUrl,
+        previewUrl,
+        interactiveWidget: false,
+      };
+    }
+
+    if (host === "open.spotify.com") {
+      const spMatch = urlObj.pathname.match(
+        /^(?:\/intl-[a-z-]+)?(?:\/embed)?\/(track|playlist|album|episode)\/([A-Za-z0-9]+)/i
+      );
+      if (spMatch) {
+        const kind = spMatch[1].toLowerCase();
+        const itemId = spMatch[2];
+        const spEmbed = `https://open.spotify.com/embed/${kind}/${itemId}?utm_source=generator`;
+        return {
+          provider: "spotify",
+          label: `Spotify (${kind})`,
+          embedUrl: spEmbed,
+          previewUrl: spEmbed,
+          interactiveWidget: true,
+        };
+      }
+    }
+
+    if (host === "zingmp3.vn") {
+      const zingSong = urlObj.pathname.match(/^\/bai-hat\/[^/]+\/([A-Za-z0-9]+)\.html$/i);
+      if (zingSong) {
+        const zEmbed = `https://zingmp3.vn/embed/song/${zingSong[1]}?start=false`;
+        return {
+          provider: "zingmp3",
+          label: `Zing MP3 (${zingSong[1]})`,
+          embedUrl: zEmbed,
+          previewUrl: zEmbed,
+          interactiveWidget: true,
+        };
+      }
+    }
+
+    if (wasIframeTag || /\/embed\b|player|zingmp3\.vn|nhaccuatui\.com/i.test(raw)) {
+      return {
+        provider: "iframe",
+        label: `Mã nhúng (${host})`,
+        embedUrl: raw,
+        previewUrl: raw,
+        interactiveWidget: true,
+      };
+    }
+
+    return null;
+  }
+
+  function resolveWeddingMusic(musicCfg) {
+    const cfg = musicCfg || {};
+    const enabled = cfg.enabled !== false;
+    const title = String(cfg.title || "Nhạc nền").trim();
+    const rawEmbed = String(cfg.embedUrl || "").trim();
+    const rawSrc = String(cfg.src || "./assets/audio/mot-doi.mp3").trim();
+    const preferEmbed = cfg.sourceType === "embed" || (cfg.sourceType !== "file" && Boolean(rawEmbed));
+
+    if (!enabled) {
+      return { enabled: false, mode: "none", title };
+    }
+
+    if (preferEmbed && rawEmbed) {
+      const parsed = parseWeddingMusicEmbed(rawEmbed);
+      if (parsed && parsed.provider === "audio") {
+        return { enabled: true, mode: "audio", src: parsed.audioSrc, title };
+      }
+      if (parsed) {
+        return { enabled: true, mode: "embed", embed: parsed, title };
+      }
+    }
+
+    const parsedFromSrc = parseWeddingMusicEmbed(rawSrc);
+    if (parsedFromSrc && parsedFromSrc.provider !== "audio") {
+      return { enabled: true, mode: "embed", embed: parsedFromSrc, title };
+    }
+
+    if (rawSrc) {
+      return { enabled: true, mode: "audio", src: rawSrc, title };
+    }
+
+    return { enabled: false, mode: "none", title };
+  }
+
   window.THEME_PRESETS = THEME_PRESETS;
   window.DEFAULT_TEMPLATE = DEFAULT_TEMPLATE;
   window.DEFAULT_WEDDING_STORE = DEFAULT_WEDDING_STORE;
@@ -306,4 +491,6 @@
   window.extractMapEmbedUrl = extractMapEmbedUrl;
   window.buildWeddingMapEmbedUrl = buildWeddingMapEmbedUrl;
   window.buildWeddingDirectionsUrl = buildWeddingDirectionsUrl;
+  window.parseWeddingMusicEmbed = parseWeddingMusicEmbed;
+  window.resolveWeddingMusic = resolveWeddingMusic;
 })();
