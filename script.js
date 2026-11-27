@@ -6,7 +6,7 @@
      ======================================================================== */
   const urlParams = new URLSearchParams(window.location.search);
   const requestedTplId = urlParams.get("tpl");
-  const activeTpl = window.getActiveWeddingTemplate(requestedTplId);
+  let activeTpl = window.getActiveWeddingTemplate(requestedTplId);
 
   function hexToRgba(hex, alpha) {
     const clean = String(hex || "#00224c").replace("#", "");
@@ -390,22 +390,36 @@
   const musicBtn = document.getElementById("music-btn");
   const musicWrap = document.getElementById("music-player-wrap");
 
-  const musicCfg = (activeTpl && activeTpl.music) || {};
-  const isMusicEnabled = musicCfg.enabled !== false;
-  const resolvedMusicSrc = String(musicCfg.src || "./assets/audio/mot-doi.mp3").trim();
-  const hasMusic = isMusicEnabled && Boolean(resolvedMusicSrc);
-
-  if (bgMusic && hasMusic && bgMusic.getAttribute("src") !== resolvedMusicSrc) {
-    bgMusic.src = resolvedMusicSrc;
-  }
-  if (musicBtn && musicCfg.title) {
-    musicBtn.title = `Nhạc nền: ${musicCfg.title}`;
-  }
-  if (musicWrap) {
-    musicWrap.classList.toggle("hidden", !hasMusic);
-  }
-
+  let hasMusic = true;
   let isMusicPlaying = false;
+
+  function applyMusicConfig(tpl) {
+    const musicCfg = (tpl && tpl.music) || {};
+    const isMusicEnabled = musicCfg.enabled !== false;
+    const resolvedMusicSrc = String(musicCfg.src || "./assets/audio/mot-doi.mp3").trim();
+    hasMusic = isMusicEnabled && Boolean(resolvedMusicSrc);
+
+    if (bgMusic && hasMusic && bgMusic.getAttribute("src") !== resolvedMusicSrc) {
+      const wasPlaying = isMusicPlaying;
+      bgMusic.pause();
+      bgMusic.src = resolvedMusicSrc;
+      bgMusic.load();
+      if (wasPlaying) tryPlayMusic();
+    }
+    if (!hasMusic && bgMusic && isMusicPlaying) {
+      bgMusic.pause();
+      isMusicPlaying = false;
+      syncMusicUI();
+    }
+    if (musicBtn && musicCfg.title) {
+      musicBtn.title = `Nhạc nền: ${musicCfg.title}`;
+    }
+    if (musicWrap) {
+      musicWrap.classList.toggle("hidden", !hasMusic);
+    }
+  }
+
+  applyMusicConfig(activeTpl);
 
   function syncMusicUI() {
     if (!musicWrap || !musicBtn) return;
@@ -587,7 +601,7 @@
   /* ========================================================================
      4. 3D Photo Album Carousel & Fullscreen Lightbox
      ======================================================================== */
-  const ALBUM_PHOTOS =
+  let ALBUM_PHOTOS =
     activeTpl.photos && Array.isArray(activeTpl.photos.album) && activeTpl.photos.album.length > 0
       ? activeTpl.photos.album
       : window.DEFAULT_TEMPLATE.photos.album;
@@ -825,7 +839,7 @@
      5. Live Countdown Timer
      ======================================================================== */
   const countdownEl = document.getElementById("countdown-display");
-  const WEDDING_TIMESTAMP = new Date(
+  let WEDDING_TIMESTAMP = new Date(
     (activeTpl.reception && activeTpl.reception.countdownIso) || "2026-12-19T18:30:00+07:00"
   ).getTime();
 
@@ -858,6 +872,16 @@
         method: "POST",
         mode: "no-cors",
         headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload),
+      }).catch(() => {});
+    } catch (_) {}
+  }
+
+  function postToCloudGuest(payload) {
+    try {
+      fetch("/api/guests", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       }).catch(() => {});
     } catch (_) {}
@@ -991,6 +1015,7 @@
       } catch (_) {}
 
       postToWebhook({ type: "rsvp", ...record });
+      postToCloudGuest({ type: "rsvp", ...record });
 
       closeRsvpModal();
       rsvpForm.reset();
@@ -1121,6 +1146,7 @@
       } catch (_) {}
 
       postToWebhook({ type: "wish", ...newWish });
+      postToCloudGuest({ type: "wish", ...newWish });
 
       guestbookForm.reset();
       renderWishes();
@@ -1194,4 +1220,65 @@
       if (e.target === giftModal) giftModal.close();
     });
   }
+
+  /* ========================================================================
+     10. Cloud Sync (Vercel Blob API)
+     ======================================================================== */
+  async function syncFromCloud() {
+    try {
+      const [cfgRes, wishRes] = await Promise.all([
+        fetch("/api/config", { cache: "no-store" }).catch(() => null),
+        fetch("/api/guests?public=wishes", { cache: "no-store" }).catch(() => null),
+      ]);
+
+      if (cfgRes && cfgRes.ok) {
+        const cfgData = await cfgRes.json();
+        if (
+          cfgData &&
+          cfgData.ok &&
+          cfgData.store &&
+          Array.isArray(cfgData.store.templates) &&
+          cfgData.store.templates.length > 0
+        ) {
+          const prevAlbumJson = JSON.stringify(ALBUM_PHOTOS);
+          window.saveWeddingStore(cfgData.store);
+          activeTpl = window.getActiveWeddingTemplate(requestedTplId);
+          applyThemeAndContent(activeTpl);
+          applyMusicConfig(activeTpl);
+
+          const nextTs = new Date(
+            (activeTpl.reception && activeTpl.reception.countdownIso) || "2026-12-19T18:30:00+07:00"
+          ).getTime();
+          if (!Number.isNaN(nextTs)) {
+            WEDDING_TIMESTAMP = nextTs;
+            updateCountdown();
+          }
+
+          const nextAlbum =
+            activeTpl.photos && Array.isArray(activeTpl.photos.album) && activeTpl.photos.album.length > 0
+              ? activeTpl.photos.album
+              : window.DEFAULT_TEMPLATE.photos.album;
+          if (JSON.stringify(nextAlbum) !== prevAlbumJson && albumTrack) {
+            ALBUM_PHOTOS = nextAlbum;
+            albumTrack.innerHTML = "";
+            activeSlide = 0;
+            renderCarousel();
+          }
+          renderWishes();
+        }
+      }
+
+      if (wishRes && wishRes.ok) {
+        const wishData = await wishRes.json();
+        if (wishData && wishData.ok && Array.isArray(wishData.wishes)) {
+          try {
+            localStorage.setItem("wedding_wishes", JSON.stringify(wishData.wishes));
+          } catch (_) {}
+          renderWishes();
+        }
+      }
+    } catch (_) {}
+  }
+
+  syncFromCloud();
 })();

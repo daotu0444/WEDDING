@@ -8,6 +8,49 @@
   <link rel="stylesheet" href="./styles.css" />
 </head>
 <body class="min-h-screen bg-[#f7f5ee] text-[#00224c]">
+  <!-- Admin Login Overlay -->
+  <div
+    id="admin-login-overlay"
+    class="fixed inset-0 z-50 flex items-center justify-center bg-[#00224c]/95 px-4 backdrop-blur-sm"
+  >
+    <div class="w-full max-w-sm rounded-2xl border border-white/15 bg-[#f7f5ee] p-6 shadow-2xl">
+      <div class="mb-5 text-center">
+        <div class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-full bg-[#00224c] text-xl text-[#ece4d8] shadow">
+          ❦
+        </div>
+        <h2 class="text-lg font-bold text-[#00224c]" style="font-family: 'Times New Roman', serif;">
+          ĐĂNG NHẬP QUẢN TRỊ
+        </h2>
+        <p class="mt-1 text-xs text-[#00224c]/70">
+          Nhập mật khẩu để chỉnh sửa và lưu trực tiếp lên web
+        </p>
+      </div>
+      <form id="admin-login-form" class="space-y-3.5">
+        <div>
+          <label for="admin-login-password" class="mb-1 block text-xs font-semibold text-gray-600">
+            Mật khẩu quản trị
+          </label>
+          <input
+            id="admin-login-password"
+            type="password"
+            required
+            autocomplete="current-password"
+            placeholder="Nhập mật khẩu..."
+            class="w-full rounded-lg border border-gray-300 bg-white px-3.5 py-2.5 text-sm outline-none focus:border-[#00224c]"
+          />
+        </div>
+        <p id="admin-login-error" class="hidden text-xs font-medium text-rose-600"></p>
+        <button
+          id="admin-login-btn"
+          type="submit"
+          class="w-full rounded-lg bg-[#00224c] py-2.5 text-sm font-semibold text-[#ece4d8] shadow transition-opacity hover:opacity-90 cursor-pointer"
+        >
+          Đăng nhập
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- Sticky Admin Header -->
   <header class="sticky top-0 z-40 border-b border-white/10 shadow-md" style="background-color: #00224c; color: #ece4d8;">
     <div class="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-3 px-4 py-3.5 sm:px-6">
@@ -24,6 +67,12 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-2">
+        <span
+          id="cloud-sync-badge"
+          class="hidden sm:inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-[#ece4d8]"
+        >
+          ☁️ Đang kết nối...
+        </span>
         <a
           id="btn-view-invite"
           href="./index.html?open=1"
@@ -57,6 +106,14 @@
         >
           <span>↺</span>
           <span>Mặc định</span>
+        </button>
+        <button
+          id="btn-admin-logout"
+          type="button"
+          class="inline-flex items-center gap-1 rounded-lg border border-white/25 px-2.5 py-1.5 text-xs font-medium text-[#ece4d8]/85 transition-colors hover:bg-white/10 cursor-pointer"
+          title="Đăng xuất"
+        >
+          🔒 Thoát
         </button>
       </div>
     </div>

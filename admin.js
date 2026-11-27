@@ -23,6 +23,195 @@
   }
 
   /* ========================================================================
+     1b. Cloud Auth & Direct Save (Vercel API + Blob)
+     ======================================================================== */
+  const ADMIN_PASS_KEY = "wedding_admin_pass";
+  let adminPassword = sessionStorage.getItem(ADMIN_PASS_KEY) || "";
+  let cloudConnected = false;
+  let suppressAutoCloudPush = false;
+
+  const loginOverlay = document.getElementById("admin-login-overlay");
+  const loginForm = document.getElementById("admin-login-form");
+  const loginPassInput = document.getElementById("admin-login-password");
+  const loginErrorEl = document.getElementById("admin-login-error");
+  const loginBtn = document.getElementById("admin-login-btn");
+  const cloudSyncBadge = document.getElementById("cloud-sync-badge");
+  const logoutBtn = document.getElementById("btn-admin-logout");
+
+  function setCloudBadge(text, ok) {
+    if (!cloudSyncBadge) return;
+    cloudSyncBadge.textContent = text;
+    cloudSyncBadge.className = ok
+      ? "hidden sm:inline-flex items-center gap-1 rounded-full bg-emerald-500/20 border border-emerald-300/30 px-2.5 py-1 text-[11px] font-medium text-emerald-100"
+      : "hidden sm:inline-flex items-center gap-1 rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-medium text-[#ece4d8]/80";
+  }
+
+  async function pushStoreToCloud(storeObj, silent = false) {
+    if (!cloudConnected || !adminPassword) return { ok: false, offline: true };
+    try {
+      const res = await fetch("/api/config", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": adminPassword,
+        },
+        body: JSON.stringify({ store: storeObj }),
+      });
+      if (res.status === 401) {
+        if (!silent) showToast("Phiên đăng nhập hết hạn, vui lòng đăng nhập lại.", "error");
+        return { ok: false, unauthorized: true };
+      }
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.ok) {
+        if (!silent) showToast(data.error || "Lưu lên đám mây thất bại.", "error");
+        return { ok: false };
+      }
+      setCloudBadge("☁️ Đã lưu đám mây", true);
+      return { ok: true };
+    } catch (_) {
+      if (!silent) showToast("Không kết nối được máy chủ đám mây.", "error");
+      return { ok: false };
+    }
+  }
+
+  async function deleteCloudGuest(type, id) {
+    if (!cloudConnected || !adminPassword || !id) return;
+    try {
+      await fetch("/api/guests", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-admin-password": adminPassword,
+        },
+        body: JSON.stringify({ type, id }),
+      });
+    } catch (_) {}
+  }
+
+  async function loadAllFromCloud() {
+    try {
+      const [cfgRes, guestRes] = await Promise.all([
+        fetch("/api/config", { cache: "no-store" }),
+        fetch("/api/guests", {
+          cache: "no-store",
+          headers: { "x-admin-password": adminPassword },
+        }),
+      ]);
+
+      if (cfgRes.ok) {
+        const cfgData = await cfgRes.json();
+        if (
+          cfgData &&
+          cfgData.ok &&
+          cfgData.store &&
+          Array.isArray(cfgData.store.templates) &&
+          cfgData.store.templates.length > 0
+        ) {
+          suppressAutoCloudPush = true;
+          originalSaveWeddingStore(cfgData.store);
+          suppressAutoCloudPush = false;
+          store = window.getWeddingStore();
+          if (!store.templates.some((t) => t.id === editingTplId)) {
+            editingTplId = store.activeTemplateId || store.templates[0].id;
+          }
+          renderTemplatesGrid();
+          populateEditorFields();
+        }
+      }
+
+      if (guestRes.ok) {
+        const guestData = await guestRes.json();
+        if (guestData && guestData.ok) {
+          if (Array.isArray(guestData.rsvps)) saveStoredRsvps(guestData.rsvps);
+          if (Array.isArray(guestData.wishes)) saveStoredWishes(guestData.wishes);
+          renderGuestDashboard();
+        }
+      }
+    } catch (_) {}
+  }
+
+  async function verifyAdminPassword(password) {
+    try {
+      const res = await fetch("/api/auth", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ password }),
+      });
+      if (res.status === 404) {
+        return { ok: true, localOnly: true };
+      }
+      const data = await res.json().catch(() => ({}));
+      if (res.ok && data.ok) {
+        return { ok: true, localOnly: false };
+      }
+      return { ok: false, error: data.error || "Mật khẩu quản trị không đúng." };
+    } catch (_) {
+      return { ok: true, localOnly: true };
+    }
+  }
+
+  async function unlockAdminWithPassword(password, silent = false) {
+    const result = await verifyAdminPassword(password);
+    if (!result.ok) {
+      if (!silent && loginErrorEl) {
+        loginErrorEl.textContent = result.error;
+        loginErrorEl.classList.remove("hidden");
+      }
+      return false;
+    }
+
+    adminPassword = password;
+    sessionStorage.setItem(ADMIN_PASS_KEY, password);
+    cloudConnected = !result.localOnly;
+    if (loginOverlay) loginOverlay.classList.add("hidden");
+    if (loginErrorEl) loginErrorEl.classList.add("hidden");
+
+    if (cloudConnected) {
+      setCloudBadge("☁️ Đã kết nối đám mây", true);
+      await loadAllFromCloud();
+    } else {
+      setCloudBadge("💻 Chế độ cục bộ", false);
+    }
+    return true;
+  }
+
+  if (loginForm) {
+    loginForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const pass = loginPassInput ? loginPassInput.value : "";
+      if (loginErrorEl) loginErrorEl.classList.add("hidden");
+      if (loginBtn) {
+        loginBtn.disabled = true;
+        loginBtn.textContent = "Đang kiểm tra...";
+      }
+      await unlockAdminWithPassword(pass, false);
+      if (loginBtn) {
+        loginBtn.disabled = false;
+        loginBtn.textContent = "Đăng nhập";
+      }
+    });
+  }
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      sessionStorage.removeItem(ADMIN_PASS_KEY);
+      adminPassword = "";
+      cloudConnected = false;
+      if (loginPassInput) loginPassInput.value = "";
+      if (loginOverlay) loginOverlay.classList.remove("hidden");
+      setCloudBadge("🔒 Đã đăng xuất", false);
+    });
+  }
+
+  const originalSaveWeddingStore = window.saveWeddingStore;
+  window.saveWeddingStore = (storeObj) => {
+    originalSaveWeddingStore(storeObj);
+    if (cloudConnected && adminPassword && !suppressAutoCloudPush) {
+      pushStoreToCloud(storeObj, true);
+    }
+  };
+
+  /* ========================================================================
      2. Multi-Template Store State & Tabs
      ======================================================================== */
   let store = window.getWeddingStore();
@@ -877,15 +1066,31 @@
     return c;
   }
 
-  function saveStoreToLocal() {
+  async function saveStoreToLocal() {
+    const saveBtn = document.getElementById("btn-save-top");
     try {
       const updated = collectFormIntoEditingTemplate();
-      window.saveWeddingStore(store);
+      suppressAutoCloudPush = true;
+      originalSaveWeddingStore(store);
+      suppressAutoCloudPush = false;
       renderTemplatesGrid();
-      showToast(`Đã lưu mẫu "${updated.name}"! Bấm "Xem thiệp" để kiểm tra.`);
+
+      if (cloudConnected && adminPassword) {
+        if (saveBtn) saveBtn.disabled = true;
+        const res = await pushStoreToCloud(store, false);
+        if (saveBtn) saveBtn.disabled = false;
+        if (res.ok) {
+          showToast(`Đã lưu trực tiếp lên web! Mẫu "${updated.name}" đã cập nhật cho mọi người.`);
+        }
+        return res.ok;
+      }
+
+      showToast(`Đã lưu cục bộ mẫu "${updated.name}"! Bấm "Xem thiệp" để kiểm tra.`);
       return true;
     } catch (_) {
-      showToast("Dung lượng ảnh quá lớn vượt giới hạn localStorage.", "error");
+      suppressAutoCloudPush = false;
+      if (saveBtn) saveBtn.disabled = false;
+      showToast("Dung lượng ảnh/nhạc quá lớn vượt giới hạn lưu trữ.", "error");
       return false;
     }
   }
@@ -1127,8 +1332,9 @@
         delBtn.textContent = "Xóa";
         delBtn.addEventListener("click", () => {
           const all = getStoredRsvps();
-          all.splice(idx, 1);
+          const [removed] = all.splice(idx, 1);
           saveStoredRsvps(all);
+          if (removed && removed.id) deleteCloudGuest("rsvp", removed.id);
           renderGuestDashboard();
           showToast("Đã xóa phản hồi RSVP.");
         });
@@ -1194,8 +1400,9 @@
         delBtn.textContent = "Xóa";
         delBtn.addEventListener("click", () => {
           const all = getStoredWishes();
-          all.splice(w.idx, 1);
+          const [removed] = all.splice(w.idx, 1);
           saveStoredWishes(all);
+          if (removed && removed.id) deleteCloudGuest("wish", removed.id);
           renderGuestDashboard();
           showToast("Đã xóa lời chúc.");
         });
@@ -1484,8 +1691,16 @@
     showToast("Đã tải file config.js (bao gồm toàn bộ các mẫu thiệp)!");
   });
 
-  document.getElementById("btn-reset-default").addEventListener("click", () => {
+  document.getElementById("btn-reset-default").addEventListener("click", async () => {
     localStorage.removeItem("wedding_store_v1");
+    if (cloudConnected && adminPassword) {
+      try {
+        await fetch("/api/config", {
+          method: "DELETE",
+          headers: { "x-admin-password": adminPassword },
+        });
+      } catch (_) {}
+    }
     store = window.getWeddingStore();
     editingTplId = store.activeTemplateId || store.templates[0].id;
     renderTemplatesGrid();
@@ -1499,4 +1714,7 @@
   renderTemplatesGrid();
   populateEditorFields();
   renderGuestDashboard();
+  if (adminPassword) {
+    unlockAdminWithPassword(adminPassword, true);
+  }
 })();
