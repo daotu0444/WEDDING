@@ -170,6 +170,11 @@
         { src: "./assets/images/photos/album-9.webp", aspect: "0.66625 / 1" },
       ],
     },
+    music: {
+      enabled: true,
+      src: "./assets/audio/mot-doi.mp3",
+      title: "Một Đời",
+    },
     webhookUrl: "",
   };
 

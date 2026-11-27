@@ -632,6 +632,46 @@
 
           <div id="editor-album-list" class="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3"></div>
         </div>
+
+        <!-- 8. Background Music -->
+        <div class="rounded-xl border border-[#00224c1a] bg-white p-5 shadow-sm">
+          <div class="mb-4 flex flex-wrap items-center justify-between gap-2 border-b border-gray-100 pb-2">
+            <h2 class="text-base font-bold text-[#00224c]">8. Nhạc nền thiệp cưới</h2>
+            <label class="inline-flex items-center gap-2 text-xs font-semibold text-[#00224c] cursor-pointer select-none">
+              <input id="ed-musicEnabled" type="checkbox" checked class="h-4 w-4 rounded border-gray-300 accent-[#00224c]" />
+              <span>Bật nhạc nền</span>
+            </label>
+          </div>
+
+          <div class="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Tên bài hát</label>
+              <input id="ed-musicTitle" type="text" placeholder="VD: Một Đời" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Đường dẫn file hoặc link nhạc (.mp3)</label>
+              <input id="ed-musicSrc" type="text" placeholder="./assets/audio/mot-doi.mp3 hoặc https://..." class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+            </div>
+            <div class="sm:col-span-2 flex flex-wrap items-center gap-2.5">
+              <label class="inline-flex items-center gap-1.5 rounded-lg bg-[#00224c] px-3 py-1.5 text-xs font-medium text-white cursor-pointer hover:opacity-90">
+                <span>🎵 Chọn file nhạc từ máy (&le; 2.5 MB)</span>
+                <input id="ed-musicFile" type="file" accept="audio/*" class="hidden" />
+              </label>
+              <button
+                id="btn-reset-music"
+                type="button"
+                class="rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-600 hover:bg-gray-50 cursor-pointer"
+              >
+                Khôi phục nhạc mặc định
+              </button>
+              <p class="text-[11px] text-gray-500">File nặng hơn 2.5 MB nên chép vào thư mục <code>assets/audio/</code> rồi nhập <code>./assets/audio/ten-file.mp3</code> hoặc dán link <code>.mp3</code> trực tiếp.</p>
+            </div>
+            <div class="sm:col-span-2 rounded-lg bg-[#f7f5ee]/70 p-3">
+              <p class="mb-1.5 text-xs font-semibold text-[#00224c]">Nghe thử nhạc nền</p>
+              <audio id="preview-music-audio" controls preload="none" src="./assets/audio/mot-doi.mp3" class="h-10 w-full"></audio>
+            </div>
+          </div>
+        </div>
       </form>
     </section>
 

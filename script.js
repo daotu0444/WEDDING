@@ -390,6 +390,21 @@
   const musicBtn = document.getElementById("music-btn");
   const musicWrap = document.getElementById("music-player-wrap");
 
+  const musicCfg = (activeTpl && activeTpl.music) || {};
+  const isMusicEnabled = musicCfg.enabled !== false;
+  const resolvedMusicSrc = String(musicCfg.src || "./assets/audio/mot-doi.mp3").trim();
+  const hasMusic = isMusicEnabled && Boolean(resolvedMusicSrc);
+
+  if (bgMusic && hasMusic && bgMusic.getAttribute("src") !== resolvedMusicSrc) {
+    bgMusic.src = resolvedMusicSrc;
+  }
+  if (musicBtn && musicCfg.title) {
+    musicBtn.title = `Nhạc nền: ${musicCfg.title}`;
+  }
+  if (musicWrap) {
+    musicWrap.classList.toggle("hidden", !hasMusic);
+  }
+
   let isMusicPlaying = false;
 
   function syncMusicUI() {
@@ -404,7 +419,7 @@
   }
 
   function tryPlayMusic() {
-    if (!bgMusic) return;
+    if (!bgMusic || !hasMusic) return;
     const playPromise = bgMusic.play();
     if (playPromise && typeof playPromise.then === "function") {
       playPromise

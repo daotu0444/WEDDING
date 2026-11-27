@@ -718,6 +718,13 @@
     setVal("ed-hero2", c.photos.hero2);
     document.getElementById("preview-hero-2").src = c.photos.hero2;
 
+    const music = c.music || { enabled: true, src: "./assets/audio/mot-doi.mp3", title: "Một Đời" };
+    const musicEnabledEl = document.getElementById("ed-musicEnabled");
+    if (musicEnabledEl) musicEnabledEl.checked = music.enabled !== false;
+    setVal("ed-musicTitle", music.title || "");
+    setVal("ed-musicSrc", music.src || "./assets/audio/mot-doi.mp3");
+    updateAdminMusicPreview();
+
     if (syncWebhookInput) syncWebhookInput.value = c.webhookUrl || "";
 
     renderEditorThemeQuickPresets();
@@ -860,6 +867,11 @@
 
     c.photos.hero1 = getVal("ed-hero1").trim();
     c.photos.hero2 = getVal("ed-hero2").trim();
+    c.music = {
+      enabled: Boolean(document.getElementById("ed-musicEnabled")?.checked),
+      title: getVal("ed-musicTitle").trim(),
+      src: getVal("ed-musicSrc").trim() || "./assets/audio/mot-doi.mp3",
+    };
     c.webhookUrl = syncWebhookInput ? syncWebhookInput.value.trim() : "";
 
     return c;
@@ -917,6 +929,70 @@
   const mapUseCoordsInput = document.getElementById("ed-mapUseCoords");
   if (mapUseCoordsInput) {
     mapUseCoordsInput.addEventListener("change", updateAdminMapPreview);
+  }
+
+  let musicPreviewTimer = null;
+  function updateAdminMusicPreview() {
+    const audioEl = document.getElementById("preview-music-audio");
+    if (!audioEl) return;
+    const src = getVal("ed-musicSrc").trim() || "./assets/audio/mot-doi.mp3";
+    if (audioEl.getAttribute("src") !== src) {
+      audioEl.pause();
+      audioEl.src = src;
+      audioEl.load();
+    }
+  }
+
+  const musicSrcInput = document.getElementById("ed-musicSrc");
+  if (musicSrcInput) {
+    musicSrcInput.addEventListener("input", () => {
+      clearTimeout(musicPreviewTimer);
+      musicPreviewTimer = setTimeout(updateAdminMusicPreview, 300);
+    });
+  }
+
+  const musicFileInput = document.getElementById("ed-musicFile");
+  if (musicFileInput) {
+    musicFileInput.addEventListener("change", (e) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      const MAX_BYTES = 2.5 * 1024 * 1024;
+      if (file.size > MAX_BYTES) {
+        showToast(
+          "File nhạc lớn hơn 2.5 MB! Hãy chép vào thư mục assets/audio/ hoặc dán link .mp3 trực tiếp.",
+          "error"
+        );
+        e.target.value = "";
+        return;
+      }
+      const reader = new FileReader();
+      reader.onload = () => {
+        if (typeof reader.result !== "string") return;
+        setVal("ed-musicSrc", reader.result);
+        if (!getVal("ed-musicTitle").trim()) {
+          setVal("ed-musicTitle", file.name.replace(/\.[^.]+$/, ""));
+        }
+        updateAdminMusicPreview();
+        showToast("Đã tải file nhạc lên. Bấm Lưu thay đổi để áp dụng!");
+      };
+      reader.onerror = () => {
+        showToast("Không thể đọc file nhạc này.", "error");
+      };
+      reader.readAsDataURL(file);
+      e.target.value = "";
+    });
+  }
+
+  const resetMusicBtn = document.getElementById("btn-reset-music");
+  if (resetMusicBtn) {
+    resetMusicBtn.addEventListener("click", () => {
+      const enabledEl = document.getElementById("ed-musicEnabled");
+      if (enabledEl) enabledEl.checked = true;
+      setVal("ed-musicTitle", "Một Đời");
+      setVal("ed-musicSrc", "./assets/audio/mot-doi.mp3");
+      updateAdminMusicPreview();
+      showToast("Đã khôi phục nhạc nền mặc định.");
+    });
   }
 
   /* ========================================================================
