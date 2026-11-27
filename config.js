@@ -123,8 +123,10 @@
     venue: {
       name: "Nhà Hàng Tiệc Cưới Riverside Palace",
       address: "Nhà Hàng Tiệc Cưới Riverside Palace, 360D Bến Vân Đồn, Phường 1, Quận 4, TP. Hồ Chí Minh",
-      mapLat: 10.7614,
-      mapLng: 106.7010,
+      mapLat: 10.7553,
+      mapLng: 106.6904,
+      mapEmbedUrl: "",
+      useCoords: false,
     },
     dressCode: {
       subtitle: "Trang phục dự tiệc",
@@ -231,6 +233,64 @@
     return active || store.templates[0];
   }
 
+  function extractMapEmbedUrl(rawInput) {
+    let raw = String(rawInput || "").trim();
+    if (!raw) return "";
+    if (/<iframe\b/i.test(raw)) {
+      const match = raw.match(/src\s*=\s*(?:"([^"]+)"|'([^']+)'|([^\s>]+))/i);
+      if (!match) return "";
+      raw = (match[1] || match[2] || match[3] || "").trim().replace(/&amp;/gi, "&");
+    }
+    if (!/^https?:\/\//i.test(raw)) return "";
+    if (!/\/maps\/embed/i.test(raw) && !/[?&]output=embed\b/i.test(raw)) {
+      const coordsMatch = raw.match(/@(-?\d+(?:\.\d+)?),(-?\d+(?:\.\d+)?)/);
+      if (coordsMatch) {
+        return `https://maps.google.com/maps?q=${coordsMatch[1]},${coordsMatch[2]}&hl=vi&z=16&ie=UTF8&iwloc=&output=embed`;
+      }
+    }
+    return raw;
+  }
+
+  function parseVenueMapState(venue) {
+    const v = venue || {};
+    const lat = Number(v.mapLat);
+    const lng = Number(v.mapLng);
+    const hasValidCoords =
+      Number.isFinite(lat) &&
+      Number.isFinite(lng) &&
+      lat >= -90 &&
+      lat <= 90 &&
+      lng >= -180 &&
+      lng <= 180 &&
+      (lat !== 0 || lng !== 0);
+    const addrQuery = String(v.address || v.name || "").trim();
+    return { v, lat, lng, hasValidCoords, addrQuery };
+  }
+
+  function buildWeddingMapEmbedUrl(venue) {
+    const { v, lat, lng, hasValidCoords, addrQuery } = parseVenueMapState(venue);
+    const custom = extractMapEmbedUrl(v.mapEmbedUrl);
+    if (custom) return custom;
+    if ((v.useCoords || !addrQuery) && hasValidCoords) {
+      return `https://maps.google.com/maps?q=${lat},${lng}&hl=vi&z=16&ie=UTF8&iwloc=&output=embed`;
+    }
+    if (addrQuery) {
+      return `https://maps.google.com/maps?q=${encodeURIComponent(addrQuery)}&hl=vi&z=16&ie=UTF8&iwloc=&output=embed`;
+    }
+    return "https://maps.google.com/maps?q=10.7553,106.6904&hl=vi&z=16&ie=UTF8&iwloc=&output=embed";
+  }
+
+  function buildWeddingDirectionsUrl(venue) {
+    const { v, lat, lng, hasValidCoords, addrQuery } = parseVenueMapState(venue);
+    if ((v.useCoords || !addrQuery) && hasValidCoords) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${lat},${lng}`;
+    }
+    if (addrQuery) {
+      return `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addrQuery)}`;
+    }
+    return "https://www.google.com/maps/dir/?api=1&destination=10.7553,106.6904";
+  }
+
   window.THEME_PRESETS = THEME_PRESETS;
   window.DEFAULT_TEMPLATE = DEFAULT_TEMPLATE;
   window.DEFAULT_WEDDING_STORE = DEFAULT_WEDDING_STORE;
@@ -238,4 +298,7 @@
   window.saveWeddingStore = saveWeddingStore;
   window.getActiveWeddingTemplate = getActiveWeddingTemplate;
   window.deepMergeTemplate = (tpl) => deepMerge(DEFAULT_TEMPLATE, tpl);
+  window.extractMapEmbedUrl = extractMapEmbedUrl;
+  window.buildWeddingMapEmbedUrl = buildWeddingMapEmbedUrl;
+  window.buildWeddingDirectionsUrl = buildWeddingDirectionsUrl;
 })();

@@ -686,6 +686,10 @@
     setVal("ed-venueAddress", c.venue.address);
     setVal("ed-mapLat", c.venue.mapLat);
     setVal("ed-mapLng", c.venue.mapLng);
+    setVal("ed-mapEmbedUrl", c.venue.mapEmbedUrl || "");
+    const useCoordsEl = document.getElementById("ed-mapUseCoords");
+    if (useCoordsEl) useCoordsEl.checked = Boolean(c.venue.useCoords);
+    updateAdminMapPreview();
 
     setVal("ed-dcSubtitle", c.dressCode.subtitle);
     [0, 1, 2].forEach((i) => {
@@ -819,11 +823,17 @@
       calendarHighlightDay: Number(getVal("ed-calDay")) || 19,
     };
 
+    const rawLat = getVal("ed-mapLat").trim();
+    const rawLng = getVal("ed-mapLng").trim();
+    const parsedLat = rawLat === "" ? 10.7553 : Number(rawLat);
+    const parsedLng = rawLng === "" ? 106.6904 : Number(rawLng);
     c.venue = {
       name: getVal("ed-venueName").trim(),
       address: getVal("ed-venueAddress").trim(),
-      mapLat: Number(getVal("ed-mapLat")) || 10.7614,
-      mapLng: Number(getVal("ed-mapLng")) || 106.7010,
+      mapLat: Number.isFinite(parsedLat) ? parsedLat : 10.7553,
+      mapLng: Number.isFinite(parsedLng) ? parsedLng : 106.6904,
+      mapEmbedUrl: getVal("ed-mapEmbedUrl").trim(),
+      useCoords: Boolean(document.getElementById("ed-mapUseCoords")?.checked),
     };
 
     c.dressCode = {
@@ -870,22 +880,48 @@
 
   document.getElementById("btn-save-top").addEventListener("click", saveStoreToLocal);
 
+  let mapPreviewTimer = null;
+  function updateAdminMapPreview() {
+    const previewIframe = document.getElementById("admin-map-preview");
+    const testLink = document.getElementById("admin-map-test-link");
+    const rawLat = getVal("ed-mapLat").trim();
+    const rawLng = getVal("ed-mapLng").trim();
+    const previewVenue = {
+      name: getVal("ed-venueName").trim(),
+      address: getVal("ed-venueAddress").trim(),
+      mapLat: rawLat === "" ? 10.7553 : Number(rawLat),
+      mapLng: rawLng === "" ? 106.6904 : Number(rawLng),
+      mapEmbedUrl: getVal("ed-mapEmbedUrl").trim(),
+      useCoords: Boolean(document.getElementById("ed-mapUseCoords")?.checked),
+    };
+    if (previewIframe && typeof window.buildWeddingMapEmbedUrl === "function") {
+      const nextSrc = window.buildWeddingMapEmbedUrl(previewVenue);
+      if (previewIframe.getAttribute("src") !== nextSrc) {
+        previewIframe.src = nextSrc;
+      }
+    }
+    if (testLink && typeof window.buildWeddingDirectionsUrl === "function") {
+      testLink.href = window.buildWeddingDirectionsUrl(previewVenue);
+    }
+  }
+
+  ["ed-venueName", "ed-venueAddress", "ed-mapLat", "ed-mapLng", "ed-mapEmbedUrl"].forEach((id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener("input", () => {
+        clearTimeout(mapPreviewTimer);
+        mapPreviewTimer = setTimeout(updateAdminMapPreview, 400);
+      });
+    }
+  });
+  const mapUseCoordsInput = document.getElementById("ed-mapUseCoords");
+  if (mapUseCoordsInput) {
+    mapUseCoordsInput.addEventListener("change", updateAdminMapPreview);
+  }
+
   /* ========================================================================
      6. Tab 3: Guest Responses (RSVP & Wishes) Dashboard + Google Sheets Sync
      ======================================================================== */
-  const DEFAULT_SAMPLE_WISHES = [
-    { name: "Chị Hai và các cháu", time: "16:00:00 16/5/2027", message: "Mừng đám cưới. Hôm nào rảnh ghé nhà chơi nhé.", isDefault: true },
-    { name: "Anh Ba ngoài Hà Nội", time: "17:00:00 17/5/2027", message: "Chúc cô dâu chú rể mãi mặn nồng.", isDefault: true },
-    { name: "Gia đình thông gia", time: "18:00:00 18/5/2027", message: "Mong hai bạn vượt qua mọi chuyện cùng nhau.", isDefault: true },
-    { name: "Thầy cô trường cũ", time: "19:00:00 19/5/2027", message: "Chúc hai đứa sớm có tin vui.", isDefault: true },
-    { name: "Bạn bè đại học", time: "20:00:00 20/5/2027", message: "Ảnh chụp nhiều lắm, mai mốt gửi hết cho hai bạn nhé.", isDefault: true },
-    { name: "Gia đình bác Hoàng", time: "21:00:00 21/5/2027", message: "Chúc hai bạn giữ được sự kiên nhẫn dành cho nhau.", isDefault: true },
-    { name: "Gia đình cô Lan", time: "22:00:00 22/5/2027", message: "Mừng hạnh phúc trăm năm, vạn sự như ý.", isDefault: true },
-    { name: "Cô Bảy", time: "23:00:00 23/5/2027", message: "Nhà mới, chuyện mới, mong toàn chuyện lành.", isDefault: true },
-    { name: "Chú Tư", time: "0:00:00 25/5/2027", message: "Chúc hai em luôn nhìn nhau như hôm nay.", isDefault: true },
-    { name: "Bà ngoại", time: "1:00:00 26/5/2027", message: "Cảm ơn bữa tiệc thật chu đáo. Chúc mừng hai bạn.", isDefault: true },
-  ];
-
   const kpiRsvpTotal = document.getElementById("kpi-rsvp-total");
   const kpiRsvpAttending = document.getElementById("kpi-rsvp-attending");
   const kpiRsvpGuestsCount = document.getElementById("kpi-rsvp-guests-count");
@@ -897,7 +933,6 @@
   const rsvpTableBody = document.getElementById("rsvp-table-body");
 
   const wishesSearchEl = document.getElementById("wishes-search");
-  const toggleDefaultWishesEl = document.getElementById("toggle-default-wishes");
   const wishesAdminList = document.getElementById("wishes-admin-list");
 
   function getStoredRsvps() {
@@ -1029,24 +1064,22 @@
     }
 
     const wishQuery = (wishesSearchEl.value || "").trim().toLowerCase();
-    const showDefault = toggleDefaultWishesEl.checked;
-    const combinedWishes = [
-      ...wishes.map((w, idx) => ({ ...w, idx, isDefault: false })),
-      ...(showDefault ? DEFAULT_SAMPLE_WISHES : []),
-    ].filter((w) => {
-      if (!wishQuery) return true;
-      return (
-        (w.name || "").toLowerCase().includes(wishQuery) ||
-        (w.message || "").toLowerCase().includes(wishQuery)
-      );
-    });
+    const combinedWishes = wishes
+      .map((w, idx) => ({ ...w, idx }))
+      .filter((w) => {
+        if (!wishQuery) return true;
+        return (
+          (w.name || "").toLowerCase().includes(wishQuery) ||
+          (w.message || "").toLowerCase().includes(wishQuery)
+        );
+      });
 
     wishesAdminList.innerHTML = "";
     if (combinedWishes.length === 0) {
       const empty = document.createElement("p");
       empty.className = "py-6 text-center text-sm text-gray-400";
       empty.textContent =
-        wishes.length === 0 && !showDefault
+        wishes.length === 0
           ? "Chưa có lời chúc mới nào được gửi từ khách."
           : "Không tìm thấy lời chúc phù hợp.";
       wishesAdminList.appendChild(empty);
@@ -1072,13 +1105,6 @@
 
         top.append(nameEl, timeEl);
 
-        if (w.isDefault) {
-          const sampleBadge = document.createElement("span");
-          sampleBadge.className = "rounded bg-gray-200 px-1.5 py-0.5 text-[10px] font-medium text-gray-600";
-          sampleBadge.textContent = "Mẫu mặc định";
-          top.appendChild(sampleBadge);
-        }
-
         const msgEl = document.createElement("p");
         msgEl.className = "text-sm text-gray-700";
         msgEl.textContent = w.message || "";
@@ -1086,20 +1112,18 @@
         left.append(top, msgEl);
         card.appendChild(left);
 
-        if (!w.isDefault) {
-          const delBtn = document.createElement("button");
-          delBtn.type = "button";
-          delBtn.className = "self-start sm:self-center text-xs font-medium text-rose-600 hover:underline cursor-pointer shrink-0";
-          delBtn.textContent = "Xóa";
-          delBtn.addEventListener("click", () => {
-            const all = getStoredWishes();
-            all.splice(w.idx, 1);
-            saveStoredWishes(all);
-            renderGuestDashboard();
-            showToast("Đã xóa lời chúc.");
-          });
-          card.appendChild(delBtn);
-        }
+        const delBtn = document.createElement("button");
+        delBtn.type = "button";
+        delBtn.className = "self-start sm:self-center text-xs font-medium text-rose-600 hover:underline cursor-pointer shrink-0";
+        delBtn.textContent = "Xóa";
+        delBtn.addEventListener("click", () => {
+          const all = getStoredWishes();
+          all.splice(w.idx, 1);
+          saveStoredWishes(all);
+          renderGuestDashboard();
+          showToast("Đã xóa lời chúc.");
+        });
+        card.appendChild(delBtn);
 
         wishesAdminList.appendChild(card);
       });
@@ -1109,7 +1133,6 @@
   rsvpSearchEl.addEventListener("input", renderGuestDashboard);
   rsvpFilterEl.addEventListener("change", renderGuestDashboard);
   wishesSearchEl.addEventListener("input", renderGuestDashboard);
-  toggleDefaultWishesEl.addEventListener("change", renderGuestDashboard);
 
   /* ========================================================================
      7. CSV Export & Google Sheets Sync
@@ -1303,6 +1326,64 @@
     return active || s.templates[0];
   }
 
+  function extractMapEmbedUrl(rawInput) {
+    let raw = String(rawInput || "").trim();
+    if (!raw) return "";
+    if (/<iframe\\b/i.test(raw)) {
+      const match = raw.match(/src\\s*=\\s*(?:"([^"]+)"|'([^']+)'|([^\\s>]+))/i);
+      if (!match) return "";
+      raw = (match[1] || match[2] || match[3] || "").trim().replace(/&amp;/gi, "&");
+    }
+    if (!/^https?:\\/\\//i.test(raw)) return "";
+    if (!/\\/maps\\/embed/i.test(raw) && !/[?&]output=embed\\b/i.test(raw)) {
+      const coordsMatch = raw.match(/@(-?\\d+(?:\\.\\d+)?),(-?\\d+(?:\\.\\d+)?)/);
+      if (coordsMatch) {
+        return \`https://maps.google.com/maps?q=\${coordsMatch[1]},\${coordsMatch[2]}&hl=vi&z=16&ie=UTF8&iwloc=&output=embed\`;
+      }
+    }
+    return raw;
+  }
+
+  function parseVenueMapState(venue) {
+    const v = venue || {};
+    const lat = Number(v.mapLat);
+    const lng = Number(v.mapLng);
+    const hasValidCoords =
+      Number.isFinite(lat) &&
+      Number.isFinite(lng) &&
+      lat >= -90 &&
+      lat <= 90 &&
+      lng >= -180 &&
+      lng <= 180 &&
+      (lat !== 0 || lng !== 0);
+    const addrQuery = String(v.address || v.name || "").trim();
+    return { v, lat, lng, hasValidCoords, addrQuery };
+  }
+
+  function buildWeddingMapEmbedUrl(venue) {
+    const { v, lat, lng, hasValidCoords, addrQuery } = parseVenueMapState(venue);
+    const custom = extractMapEmbedUrl(v.mapEmbedUrl);
+    if (custom) return custom;
+    if ((v.useCoords || !addrQuery) && hasValidCoords) {
+      return \`https://maps.google.com/maps?q=\${lat},\${lng}&hl=vi&z=16&ie=UTF8&iwloc=&output=embed\`;
+    }
+    if (addrQuery) {
+      return \`https://maps.google.com/maps?q=\${encodeURIComponent(addrQuery)}&hl=vi&z=16&ie=UTF8&iwloc=&output=embed\`;
+    }
+    return "https://maps.google.com/maps?q=10.7553,106.6904&hl=vi&z=16&ie=UTF8&iwloc=&output=embed";
+  }
+
+  function buildWeddingDirectionsUrl(venue) {
+    const { v, lat, lng, hasValidCoords, addrQuery } = parseVenueMapState(venue);
+    if ((v.useCoords || !addrQuery) && hasValidCoords) {
+      return \`https://www.google.com/maps/dir/?api=1&destination=\${lat},\${lng}\`;
+    }
+    if (addrQuery) {
+      return \`https://www.google.com/maps/dir/?api=1&destination=\${encodeURIComponent(addrQuery)}\`;
+    }
+    return "https://www.google.com/maps/dir/?api=1&destination=10.7553,106.6904";
+  }
+
   window.THEME_PRESETS = THEME_PRESETS;
   window.DEFAULT_TEMPLATE = DEFAULT_TEMPLATE;
   window.DEFAULT_WEDDING_STORE = DEFAULT_WEDDING_STORE;
@@ -1310,6 +1391,9 @@
   window.saveWeddingStore = saveWeddingStore;
   window.getActiveWeddingTemplate = getActiveWeddingTemplate;
   window.deepMergeTemplate = (tpl) => deepMerge(DEFAULT_TEMPLATE, tpl);
+  window.extractMapEmbedUrl = extractMapEmbedUrl;
+  window.buildWeddingMapEmbedUrl = buildWeddingMapEmbedUrl;
+  window.buildWeddingDirectionsUrl = buildWeddingDirectionsUrl;
 })();
 `;
     const blob = new Blob([fileContent], { type: "application/javascript;charset=utf-8;" });

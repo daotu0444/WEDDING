@@ -446,12 +446,39 @@
               <input id="ed-venueAddress" type="text" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm" />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-gray-600 mb-1">Vĩ độ bản đồ (Latitude)</label>
-              <input id="ed-mapLat" type="number" step="0.0001" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Vĩ độ bản đồ - Latitude (tùy chọn)</label>
+              <input id="ed-mapLat" type="number" step="0.0001" placeholder="10.7553" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
             </div>
             <div>
-              <label class="block text-xs font-semibold text-gray-600 mb-1">Kinh độ bản đồ (Longitude)</label>
-              <input id="ed-mapLng" type="number" step="0.0001" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Kinh độ bản đồ - Longitude (tùy chọn)</label>
+              <input id="ed-mapLng" type="number" step="0.0001" placeholder="106.6904" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+            </div>
+            <div class="sm:col-span-2">
+              <label class="block text-xs font-semibold text-gray-600 mb-1">Link nhúng Google Maps hoặc mã <code>&lt;iframe&gt;</code> (tùy chọn)</label>
+              <input id="ed-mapEmbedUrl" type="text" placeholder="https://www.google.com/maps/embed?pb=... hoặc dán cả thẻ <iframe>" class="w-full rounded-lg border border-gray-200 px-3 py-2 text-sm font-mono" />
+              <p class="mt-1 text-[11px] text-gray-500">Để trống để tự động tải Google Maps từ địa chỉ đầy đủ (hoặc từ tọa độ nếu chọn bên dưới).</p>
+            </div>
+            <div class="sm:col-span-2">
+              <label class="inline-flex items-center gap-2 text-xs font-medium text-gray-700 cursor-pointer select-none">
+                <input id="ed-mapUseCoords" type="checkbox" class="h-4 w-4 rounded border-gray-300 text-[#00224c]" />
+                <span>Ưu tiên ghim bản đồ theo tọa độ (Vĩ độ / Kinh độ) thay vì tìm theo địa chỉ</span>
+              </label>
+            </div>
+            <div class="sm:col-span-2 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-semibold text-gray-600">Xem trước bản đồ</span>
+                <a id="admin-map-test-link" href="https://www.google.com/maps" target="_blank" rel="noopener noreferrer" class="text-xs font-semibold text-[#00224c] hover:underline">Mở kiểm tra trên Google Maps ↗</a>
+              </div>
+              <div class="h-[220px] w-full overflow-hidden rounded-xl border border-gray-200 bg-gray-100">
+                <iframe
+                  id="admin-map-preview"
+                  title="Xem trước bản đồ"
+                  loading="lazy"
+                  allowfullscreen=""
+                  referrerpolicy="no-referrer-when-downgrade"
+                  class="h-full w-full border-0"
+                ></iframe>
+              </div>
             </div>
             <div>
               <label class="block text-xs font-semibold text-gray-600 mb-1">Mô tả Dress Code</label>
@@ -807,10 +834,6 @@ function doGet() {
             placeholder="Tìm theo tên hoặc nội dung lời chúc..."
             class="flex-1 rounded-lg border border-gray-200 px-3.5 py-2 text-sm outline-none focus:border-[#00224c]"
           />
-          <label class="inline-flex items-center gap-2 text-xs font-medium text-[#00224c]/80 cursor-pointer select-none">
-            <input id="toggle-default-wishes" type="checkbox" class="h-4 w-4 accent-[#00224c]" />
-            <span>Hiện thêm 10 lời chúc mẫu mặc định</span>
-          </label>
         </div>
 
         <div id="wishes-admin-list" class="space-y-2.5"></div>

@@ -227,18 +227,33 @@
       venueAddrEl.textContent = tpl.venue.address;
       venueAddrEl.style.color = hexToRgba(primary, 0.72);
     }
+    const mapWrap = document.getElementById("venue-map-wrap");
+    if (mapWrap) {
+      mapWrap.style.borderColor = hexToRgba(primary, 0.16);
+    }
+    const mapFallback = document.getElementById("venue-map-fallback");
+    if (mapFallback) {
+      mapFallback.style.color = hexToRgba(primary, 0.72);
+    }
+    const mapFallbackName = document.getElementById("venue-map-fallback-name");
+    if (mapFallbackName) {
+      mapFallbackName.textContent = tpl.venue.name || tpl.venue.address || "Địa điểm tổ chức tiệc cưới";
+    }
     const mapIframe = document.getElementById("venue-map-iframe");
     if (mapIframe) {
-      const lat = Number(tpl.venue.mapLat) || 10.7614;
-      const lng = Number(tpl.venue.mapLng) || 106.7010;
-      const dLat = 0.0032;
-      const dLng = 0.0042;
-      const bbox = `${(lng - dLng).toFixed(4)}%2C${(lat - dLat).toFixed(4)}%2C${(lng + dLng).toFixed(4)}%2C${(lat + dLat).toFixed(4)}`;
-      mapIframe.src = `https://www.openstreetmap.org/export/embed.html?bbox=${bbox}&layer=mapnik&marker=${lat.toFixed(4)}%2C${lng.toFixed(4)}`;
+      const mapSrc = typeof window.buildWeddingMapEmbedUrl === "function"
+        ? window.buildWeddingMapEmbedUrl(tpl.venue)
+        : `https://maps.google.com/maps?q=${encodeURIComponent(tpl.venue.address || tpl.venue.name || "10.7553,106.6904")}&hl=vi&z=16&ie=UTF8&iwloc=&output=embed`;
+      mapIframe.title = `Bản đồ địa điểm ${tpl.venue.name || tpl.venue.address || "tiệc cưới"}`;
+      if (mapIframe.getAttribute("src") !== mapSrc) {
+        mapIframe.src = mapSrc;
+      }
     }
     const dirLink = document.getElementById("venue-directions-link");
     if (dirLink) {
-      dirLink.href = `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(tpl.venue.address)}`;
+      dirLink.href = typeof window.buildWeddingDirectionsUrl === "function"
+        ? window.buildWeddingDirectionsUrl(tpl.venue)
+        : `https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(tpl.venue.address || "10.7553,106.6904")}`;
       dirLink.style.color = hexToRgba(primary, 0.72);
     }
 
@@ -978,19 +993,6 @@
   /* ========================================================================
      8. Guestbook Wishes & AI Wish Generator Modal
      ======================================================================== */
-  const DEFAULT_WISHES = [
-    { name: "Chị Hai và các cháu", time: "16:00:00 16/5/2027", message: "Mừng đám cưới. Hôm nào rảnh ghé nhà chơi nhé." },
-    { name: "Anh Ba ngoài Hà Nội", time: "17:00:00 17/5/2027", message: "Chúc cô dâu chú rể mãi mặn nồng." },
-    { name: "Gia đình thông gia", time: "18:00:00 18/5/2027", message: "Mong hai bạn vượt qua mọi chuyện cùng nhau." },
-    { name: "Thầy cô trường cũ", time: "19:00:00 19/5/2027", message: "Chúc hai đứa sớm có tin vui." },
-    { name: "Bạn bè đại học", time: "20:00:00 20/5/2027", message: "Ảnh chụp nhiều lắm, mai mốt gửi hết cho hai bạn nhé." },
-    { name: "Gia đình bác Hoàng", time: "21:00:00 21/5/2027", message: "Chúc hai bạn giữ được sự kiên nhẫn dành cho nhau." },
-    { name: "Gia đình cô Lan", time: "22:00:00 22/5/2027", message: "Mừng hạnh phúc trăm năm, vạn sự như ý." },
-    { name: "Cô Bảy", time: "23:00:00 23/5/2027", message: "Nhà mới, chuyện mới, mong toàn chuyện lành." },
-    { name: "Chú Tư", time: "0:00:00 25/5/2027", message: "Chúc hai em luôn nhìn nhau như hôm nay." },
-    { name: "Bà ngoại", time: "1:00:00 26/5/2027", message: "Cảm ơn bữa tiệc thật chu đáo. Chúc mừng hai bạn." },
-  ];
-
   const AI_WISH_POOL = [
     "Hy vọng rằng mỗi ngày của hai bạn đều là một ngày đáng nhớ và hạnh phúc.",
     "Hy vọng hai bạn luôn tìm thấy bình yên và hạnh phúc trong vòng tay của nhau.",
@@ -1024,11 +1026,11 @@
   function loadWishes() {
     try {
       const saved = JSON.parse(localStorage.getItem("wedding_wishes") || "[]");
-      if (Array.isArray(saved) && saved.length > 0) {
-        return [...saved, ...DEFAULT_WISHES];
+      if (Array.isArray(saved)) {
+        return saved;
       }
     } catch (_) {}
-    return DEFAULT_WISHES;
+    return [];
   }
 
   function formatViTimestamp(date) {
@@ -1041,6 +1043,14 @@
     const primaryColor = (activeTpl.theme && activeTpl.theme.primary) || "#00224c";
     const wishes = loadWishes();
     wishesListEl.innerHTML = "";
+    if (wishes.length === 0) {
+      const emptyEl = document.createElement("p");
+      emptyEl.className = "py-4 text-center text-sm italic";
+      emptyEl.style.color = hexToRgba(primaryColor, 0.6);
+      emptyEl.textContent = "Chưa có lời chúc nào. Hãy là người đầu tiên gửi lời chúc đến hai bạn!";
+      wishesListEl.appendChild(emptyEl);
+      return;
+    }
     for (const item of wishes) {
       const card = document.createElement("div");
       card.className = "rounded-[8px] border p-4 text-sm";

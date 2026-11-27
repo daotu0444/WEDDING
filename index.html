@@ -727,14 +727,32 @@ TƯ GIA</p>
               Nhà Hàng Tiệc Cưới Riverside Palace, 360D Bến Vân Đồn, Phường 1, Quận 4, TP. Hồ Chí Minh
             </p>
 
-            <iframe
-              id="venue-map-iframe"
-              title="Bản đồ địa điểm tổ chức tiệc cưới Riverside Palace"
-              src="https://www.openstreetmap.org/export/embed.html?bbox=106.6968%2C10.7582%2C106.7052%2C10.7646&layer=mapnik&marker=10.7614%2C106.7010"
-              loading="lazy"
-              referrerpolicy="no-referrer-when-downgrade"
-              class="mt-3 h-[268px] w-full max-w-[338px] overflow-hidden rounded-[15px] border border-[#00224c22] shadow-sm md:h-[380px] md:max-w-[560px]"
-            ></iframe>
+            <div
+              id="venue-map-wrap"
+              class="relative mt-3 h-[268px] w-full max-w-[338px] overflow-hidden rounded-[15px] border border-[#00224c22] bg-[#ece8df] shadow-sm md:h-[380px] md:max-w-[560px]"
+            >
+              <div
+                id="venue-map-fallback"
+                class="pointer-events-none absolute inset-0 flex flex-col items-center justify-center gap-2 px-5 text-center"
+                style="color: rgba(0, 34, 76, 0.7);"
+              >
+                <svg class="h-8 w-8 opacity-75" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <p id="venue-map-fallback-name" class="text-xs font-semibold md:text-sm">Nhà Hàng Tiệc Cưới Riverside Palace</p>
+                <p class="text-[11px] opacity-75">Đang tải bản đồ Google Maps...</p>
+              </div>
+              <iframe
+                id="venue-map-iframe"
+                title="Bản đồ địa điểm tổ chức tiệc cưới Riverside Palace"
+                src="https://maps.google.com/maps?q=Nh%C3%A0%20H%C3%A0ng%20Ti%E1%BB%87c%20C%C6%B0%E1%BB%9Bi%20Riverside%20Palace%2C%20360D%20B%E1%BA%BFn%20V%C3%A2n%20%C4%90%E1%BB%93n%2C%20Ph%C6%B0%E1%BB%9Dng%201%2C%20Qu%E1%BA%ADn%204%2C%20TP.%20H%E1%BB%93%20Ch%C3%AD%20Minh&amp;hl=vi&amp;z=16&amp;ie=UTF8&amp;iwloc=&amp;output=embed"
+                loading="lazy"
+                allowfullscreen=""
+                referrerpolicy="no-referrer-when-downgrade"
+                class="relative z-10 h-full w-full border-0"
+              ></iframe>
+            </div>
 
             <a
               id="venue-directions-link"
